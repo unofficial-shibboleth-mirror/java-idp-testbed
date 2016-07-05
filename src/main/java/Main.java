@@ -51,7 +51,7 @@ public class Main {
             // Set idp.webflows to "classpath*:/flows" so user flows in multiple locations can be found.
             System.setProperty("idp.webflows", "classpath*:/flows");
 
-            // Determine path to jetty-base in the idp-distribution module.
+            // Determine path to jetty-base in the idp-example-jetty-base project.
             final Path pathToJettyBase =
                     Paths.get(Paths.get("").toAbsolutePath().getParent().toAbsolutePath().toString(),
                             "java-idp-example-jetty-base", "src", "main", "resources", "jetty-base");
