@@ -16,7 +16,7 @@
     <properties>
         <idp.groupId>net.shibboleth.idp</idp.groupId>
         <idp.version>3.3.0-SNAPSHOT</idp.version>
-        <idp-example-jetty-base.version>9.2.0-SNAPSHOT</idp-example-jetty-base.version>
+        <idp-jetty-base.version>9.2.0-SNAPSHOT</idp-jetty-base.version>
         <opensaml.groupId>org.opensaml</opensaml.groupId>
         <opensaml.version>3.3.0-SNAPSHOT</opensaml.version>
         <spring-extensions.version>5.3.0-SNAPSHOT</spring-extensions.version>
@@ -198,9 +198,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.shibboleth.idp.example</groupId>
-            <artifactId>idp-example-jetty-base</artifactId>
-            <version>${idp-example-jetty-base.version}</version>
+            <groupId>net.shibboleth.idp</groupId>
+            <artifactId>idp-jetty-base</artifactId>
+            <version>${idp-jetty-base.version}</version>
             <scope>provided</scope>
             <type>tar.gz</type>
         </dependency>
