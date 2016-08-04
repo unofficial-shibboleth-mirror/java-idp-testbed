@@ -560,25 +560,26 @@ public class SAML2Controller extends BaseSAMLController {
      */
     @RequestMapping(value = "/AttributeQuery", method = RequestMethod.POST) public ResponseEntity<String>
             initSAML2AttributeQuery(HttpServletRequest servletRequest, HttpServletResponse servletResponse,
-                    @RequestParam("endpoint") String endpoint,
-                    @RequestParam("principalName") String principalName,
-                    @RequestParam("trustedCertificate") String trustedCertificate,
-                    @RequestParam("trustedCertificatePassword") String trustedCertificatePassword,
-                    @RequestParam("clientCertificate") String clientCertificate,
-                    @RequestParam("clientKey") String clientKey,
-                    @RequestParam("clientPassword") String clientPassword) throws Exception {
+                    @RequestParam(value = "endpoint", required = true) String endpoint,
+                    @RequestParam(value = "principalName", required = true) String principalName,
+                    @RequestParam(value = "trustedTLSCertificate", required = true) String trustedTLSCertificate,
+                    @RequestParam(value = "trustedTLSCertificatePassword", required = true) String trustedTLSCertificatePassword,
+                    @RequestParam(value = "clientTLSCertificate", required = false) String clientTLSCertificate,
+                    @RequestParam(value = "clientTLSPrivateKey", required = true) String clientTLSPrivateKey,
+                    @RequestParam(value = "clientTLSPassword", required = true) String clientTLSPassword)
+                    throws Exception {
 
-        final Resource trustedCertificateResource = applicationContext.getResource(trustedCertificate);
-        log.debug("SAML 2 AttributeQuery trusted certificate  '{}'", trustedCertificateResource);
+        final Resource trustedTLSCertificateResource = applicationContext.getResource(trustedTLSCertificate);
+        log.debug("Trusted TLS certificate resource '{}'", trustedTLSCertificateResource);
 
-        final Resource clientCertificateResource = applicationContext.getResource(clientCertificate);
-        log.debug("SAML 2 AttributeQuery client certificate  '{}'", clientCertificateResource);
+        final Resource clientTLSCertificateResource = applicationContext.getResource(clientTLSCertificate);
+        log.debug("Client TLS certificate resource '{}'", clientTLSCertificateResource);
 
-        final Resource clientKeyResource = applicationContext.getResource(clientKey);
-        log.debug("SAML 2 AttributeQuery client key  '{}'", clientKeyResource);
+        final Resource clientTLSPrivateKeyResource = applicationContext.getResource(clientTLSPrivateKey);
+        log.debug("Client TLS private key resource '{}'", clientTLSPrivateKeyResource);
 
-        final HttpClient httpClient = buildHttpClient(trustedCertificateResource, trustedCertificatePassword,
-                clientCertificateResource, clientKeyResource, clientPassword);
+        final HttpClient httpClient = buildHttpClient(trustedTLSCertificateResource, trustedTLSCertificatePassword,
+                clientTLSCertificateResource, clientTLSPrivateKeyResource, clientTLSPassword);
 
         final HttpSOAPClient httpSoapClient = new HttpSOAPClient();
         httpSoapClient.setParserPool(parserPool);
@@ -665,21 +666,27 @@ public class SAML2Controller extends BaseSAMLController {
         return inOutOpCtx;
     }
 
-    @Nonnull public HttpClient buildHttpClient(Resource trustedCertificate, String trustedCertificatePassword, Resource clientCertificate,
-            Resource clientKey, String clientPassword) throws Exception {
+    @Nonnull public HttpClient buildHttpClient(@Nonnull final Resource trustedTLSCertificate,
+            @Nonnull final String trustedTLSCertificatePassword, @Nullable final Resource clientTLSCertificate,
+            @Nonnull final Resource clientTLSPrivateKey, @Nonnull final String clientTLSPassword) throws Exception {
 
         final KeyStore trustStore = KeyStore.getInstance("PKCS12");
-        trustStore.load(trustedCertificate.getInputStream(), trustedCertificatePassword.toCharArray());
+        trustStore.load(trustedTLSCertificate.getInputStream(), trustedTLSCertificatePassword.toCharArray());
 
-        final PrivateKey clientPrivateKey = KeyPairUtil.readPrivateKey(clientKey.getInputStream());
-        final X509Certificate clientCert = CertUtil.readCertificate(clientCertificate.getInputStream());
+        final PrivateKey clientPrivateKey = KeyPairUtil.readPrivateKey(clientTLSPrivateKey.getInputStream());
+
+        X509Certificate clientCert = null;
+        if (clientTLSCertificate != null) {
+            clientCert = CertUtil.readCertificate(clientTLSCertificate.getInputStream());
+        }
+
         final KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         keyStore.load(null, null);
-        keyStore.setKeyEntry("sp", clientPrivateKey, clientPassword.toCharArray(), new Certificate[] {clientCert});
+        keyStore.setKeyEntry("sp", clientPrivateKey, clientTLSPassword.toCharArray(), new Certificate[] {clientCert});
 
         final SSLContextBuilder sslContextBuilder = SSLContexts.custom();
         sslContextBuilder.loadTrustMaterial(trustStore);
-        sslContextBuilder.loadKeyMaterial(keyStore, clientPassword.toCharArray());
+        sslContextBuilder.loadKeyMaterial(keyStore, clientTLSPassword.toCharArray());
 
         final SSLContext sslcontext = sslContextBuilder.build();
 
