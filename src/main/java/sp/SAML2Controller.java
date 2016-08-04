@@ -583,7 +583,10 @@ public class SAML2Controller extends BaseSAMLController {
         final Resource trustedTLSCertificateResource = applicationContext.getResource(trustedTLSCertificate);
         log.debug("Trusted TLS certificate resource '{}'", trustedTLSCertificateResource);
 
-        final Resource clientTLSCertificateResource = applicationContext.getResource(clientTLSCertificate);
+        Resource clientTLSCertificateResource = null;
+        if (StringSupport.trimOrNull(clientTLSCertificate) != null) {
+            clientTLSCertificateResource = applicationContext.getResource(clientTLSCertificate);
+        }
         log.debug("Client TLS certificate resource '{}'", clientTLSCertificateResource);
 
         final Resource clientTLSPrivateKeyResource = applicationContext.getResource(clientTLSPrivateKey);
