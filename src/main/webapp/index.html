@@ -219,6 +219,14 @@
             <td>clientTLSPassword</td>
             <td><input id="saml2-attribute-query-clientTLSPassword" name="clientTLSPassword" value="secret" size="20" /></td>
         </tr>
+        <tr>
+            <td>clientSigningCertificate</td>
+            <td><input id="saml2-attribute-query-clientSigningCertificate" name="clientSigningCertificate" value="classpath:/credentials/sp.crt" size="90" /></td>
+        </tr>
+        <tr>
+            <td>clientSigningPrivateKey</td>
+            <td><input id="saml2-attribute-query-clientSigningPrivateKey" name="clientSigningPrivateKey" value="classpath:/credentials/sp.key" size="90" /></td>
+        </tr>
     </table>
     <input type="submit" value="SAML2AttributeQuery">
 </form>

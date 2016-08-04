@@ -1,5 +1,6 @@
 package sp;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.security.KeyStore;
 import java.security.PrivateKey;
@@ -15,8 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.net.URLBuilder;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.security.SecureRandomIdentifierGenerationStrategy;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
+import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.SSLContextBuilder;
@@ -28,6 +31,7 @@ import org.cryptacular.util.KeyPairUtil;
 import org.joda.time.DateTime;
 import org.opensaml.core.xml.XMLObject;
 import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
+import org.opensaml.core.xml.io.MarshallingException;
 import org.opensaml.messaging.context.InOutOperationContext;
 import org.opensaml.messaging.context.MessageContext;
 import org.opensaml.messaging.encoder.MessageEncodingException;
@@ -57,13 +61,18 @@ import org.opensaml.saml.saml2.metadata.Endpoint;
 import org.opensaml.saml.saml2.metadata.SingleLogoutService;
 import org.opensaml.saml.saml2.metadata.SingleSignOnService;
 import org.opensaml.saml.saml2.profile.SAML2ActionTestingSupport;
+import org.opensaml.security.SecurityException;
+import org.opensaml.security.x509.BasicX509Credential;
 import org.opensaml.soap.client.http.HttpSOAPClient;
 import org.opensaml.soap.messaging.context.SOAP11Context;
 import org.opensaml.soap.soap11.Body;
 import org.opensaml.soap.soap11.Envelope;
 import org.opensaml.xmlsec.SignatureSigningParameters;
 import org.opensaml.xmlsec.context.SecurityParametersContext;
+import org.opensaml.xmlsec.signature.SignableXMLObject;
 import org.opensaml.xmlsec.signature.support.SignatureConstants;
+import org.opensaml.xmlsec.signature.support.SignatureException;
+import org.opensaml.xmlsec.signature.support.SignatureSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -566,7 +575,9 @@ public class SAML2Controller extends BaseSAMLController {
                     @RequestParam(value = "trustedTLSCertificatePassword", required = true) String trustedTLSCertificatePassword,
                     @RequestParam(value = "clientTLSCertificate", required = false) String clientTLSCertificate,
                     @RequestParam(value = "clientTLSPrivateKey", required = true) String clientTLSPrivateKey,
-                    @RequestParam(value = "clientTLSPassword", required = true) String clientTLSPassword)
+                    @RequestParam(value = "clientTLSPassword", required = true) String clientTLSPassword,
+                    @RequestParam(value = "clientSigningCertificate", required = false) String clientSigningCertificate,
+                    @RequestParam(value = "clientSigningPrivateKey", required = false) String clientSigningPrivateKey)
                     throws Exception {
 
         final Resource trustedTLSCertificateResource = applicationContext.getResource(trustedTLSCertificate);
@@ -586,6 +597,11 @@ public class SAML2Controller extends BaseSAMLController {
         httpSoapClient.setHttpClient(httpClient);
 
         final AttributeQuery attributeQuery = buildSAML2AttributeQueryRequest(servletRequest, principalName);
+
+        // Sign if client signing certificate is present
+        if (StringSupport.trimOrNull(clientSigningCertificate) != null) {
+            sign(attributeQuery, clientSigningCertificate, clientSigningPrivateKey);
+        }
 
         final Envelope envelope = buildSOAP11Envelope(attributeQuery);
 
@@ -693,6 +709,28 @@ public class SAML2Controller extends BaseSAMLController {
         final CloseableHttpClient httpClient = HttpClients.custom().setSslcontext(sslcontext).build();
 
         return httpClient;
+    }
+
+    public void sign(@Nonnull final SignableXMLObject signable, @Nonnull final String certificate,
+            @Nonnull final String privateKey)
+            throws SecurityException, MarshallingException, SignatureException, XMLParserException, IOException {
+
+        final Resource certificateResource = applicationContext.getResource(certificate);
+        log.debug("Signing certificate resource '{}'", certificateResource);
+
+        final Resource privateKeyResource = applicationContext.getResource(privateKey);
+        log.debug("Signing private key resource '{}'", privateKeyResource);
+
+        final X509Certificate cert = CertUtil.readCertificate(certificateResource.getInputStream());
+        final PrivateKey key = KeyPairUtil.readPrivateKey(privateKeyResource.getInputStream());
+        final BasicX509Credential cred = new BasicX509Credential(cert, key);
+
+        final SignatureSigningParameters signingParameters = new SignatureSigningParameters();
+        signingParameters.setSigningCredential(cred);
+        signingParameters.setSignatureAlgorithm(SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA256);
+        signingParameters.setSignatureCanonicalizationAlgorithm(SignatureConstants.ALGO_ID_C14N_EXCL_OMIT_COMMENTS);
+
+        SignatureSupport.signObject(signable, signingParameters);
     }
 
 }
