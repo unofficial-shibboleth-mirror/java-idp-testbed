@@ -230,6 +230,13 @@
         <!-- Runtime scope -->
         <dependency>
             <groupId>${idp.groupId}</groupId>
+            <artifactId>idp-admin-impl</artifactId>
+            <version>${idp.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>${idp.groupId}</groupId>
             <artifactId>idp-consent-impl</artifactId>
             <version>${idp.version}</version>
             <scope>runtime</scope>
