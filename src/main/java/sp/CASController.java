@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import net.shibboleth.idp.cas.protocol.ProtocolParam;
 import net.shibboleth.utilities.java.support.collection.Pair;
 import net.shibboleth.utilities.java.support.net.HttpServletSupport;
-import net.shibboleth.utilities.java.support.net.URISupport;
 import net.shibboleth.utilities.java.support.net.URLBuilder;
 
 @Controller
@@ -94,7 +93,7 @@ public class CASController {
 
         final URLBuilder urlBuilder = new URLBuilder(endpointURL);
 
-        final String ticket = getRawParamValue(servletRequest, ProtocolParam.Ticket.id());
+        final String ticket = servletRequest.getParameter(ProtocolParam.Ticket.id());
 
         final List<Pair<String, String>> queryParams = urlBuilder.getQueryParams();
         queryParams.add(new Pair<String, String>(ProtocolParam.Service.id(), baseUrl + casSPServicePath));
@@ -126,19 +125,5 @@ public class CASController {
             log.error("Couldn't parse request URL, reverting to internal default base URL: {}", requestUrl);
             return "http://localhost:8080";
         }
-    }
-
-    /**
-     * Get raw parameter value from query string.
-     * 
-     * @param servletRequest
-     * @param paramName parameter name
-     * @return the raw parameter value
-     */
-    private String getRawParamValue(HttpServletRequest servletRequest, String paramName) {
-        final String queryString = servletRequest.getQueryString();
-        final String rawParam = URISupport.getRawQueryStringParameter(queryString, paramName);
-        final String[] params = rawParam.split("=", 2);
-        return params[1];
     }
 }
