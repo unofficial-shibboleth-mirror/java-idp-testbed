@@ -19,7 +19,7 @@
         <idp-jetty-base.version>9.2.0-SNAPSHOT</idp-jetty-base.version>
         <opensaml.groupId>org.opensaml</opensaml.groupId>
         <opensaml.version>3.4.0-SNAPSHOT</opensaml.version>
-        <spring-extensions.version>5.3.1-SNAPSHOT</spring-extensions.version>
+        <spring-extensions.version>5.4.0-SNAPSHOT</spring-extensions.version>
      </properties>
 
     <repositories>
