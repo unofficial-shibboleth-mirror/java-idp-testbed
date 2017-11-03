@@ -53,7 +53,9 @@ import org.opensaml.saml.saml2.core.LogoutResponse;
 import org.opensaml.saml.saml2.core.NameID;
 import org.opensaml.saml.saml2.core.NameIDPolicy;
 import org.opensaml.saml.saml2.core.RequestedAuthnContext;
+import org.opensaml.saml.saml2.core.RequesterID;
 import org.opensaml.saml.saml2.core.Response;
+import org.opensaml.saml.saml2.core.Scoping;
 import org.opensaml.saml.saml2.core.Status;
 import org.opensaml.saml.saml2.core.StatusCode;
 import org.opensaml.saml.saml2.core.Subject;
@@ -385,6 +387,21 @@ public class SAML2Controller extends BaseSAMLController {
 	                RequestedAuthnContext.DEFAULT_ELEMENT_NAME).buildObject(RequestedAuthnContext.DEFAULT_ELEMENT_NAME);
 	        rac.getAuthnContextClassRefs().add(ref);
 	        authnRequest.setRequestedAuthnContext(rac);
+		}
+		
+		if (servletRequest.getParameter("requesters") != null) {
+		    final String[] requesters = servletRequest.getParameter("requesters").split(",");
+		    if (requesters != null && requesters.length > 0) {
+	            final Scoping scoping = (Scoping) builderFactory.getBuilder(
+	                    Scoping.DEFAULT_ELEMENT_NAME).buildObject(Scoping.DEFAULT_ELEMENT_NAME);
+	            for (final String req : requesters) {
+	                final RequesterID requesterID = (RequesterID) builderFactory.getBuilder(
+	                        RequesterID.DEFAULT_ELEMENT_NAME).buildObject(RequesterID.DEFAULT_ELEMENT_NAME);
+	                requesterID.setRequesterID(req);
+	                scoping.getRequesterIDs().add(requesterID);
+	            }
+	            authnRequest.setScoping(scoping);
+		    }
 		}
 		
 		return authnRequest;
