@@ -716,7 +716,7 @@ public class SAML2Controller extends BaseSAMLController {
             clientCert = CertUtil.readCertificate(clientTLSCertificate.getInputStream());
         }
 
-        final KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        final KeyStore keyStore = KeyStore.getInstance("JKS");
         keyStore.load(null, null);
         keyStore.setKeyEntry("sp", clientPrivateKey, clientTLSPassword.toCharArray(), new Certificate[] {clientCert});
 
