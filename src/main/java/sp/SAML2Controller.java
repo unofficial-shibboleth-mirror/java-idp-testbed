@@ -40,6 +40,7 @@ import org.opensaml.saml.common.messaging.SAMLMessageSecuritySupport;
 import org.opensaml.saml.common.messaging.context.SAMLEndpointContext;
 import org.opensaml.saml.common.messaging.context.SAMLPeerEntityContext;
 import org.opensaml.saml.common.xml.SAMLConstants;
+import org.opensaml.saml.ext.reqattr.RequestedAttributes;
 import org.opensaml.saml.ext.saml2aslo.Asynchronous;
 import org.opensaml.saml.saml2.binding.encoding.impl.HTTPPostEncoder;
 import org.opensaml.saml.saml2.binding.encoding.impl.HTTPRedirectDeflateEncoder;
@@ -60,6 +61,7 @@ import org.opensaml.saml.saml2.core.Status;
 import org.opensaml.saml.saml2.core.StatusCode;
 import org.opensaml.saml.saml2.core.Subject;
 import org.opensaml.saml.saml2.metadata.Endpoint;
+import org.opensaml.saml.saml2.metadata.RequestedAttribute;
 import org.opensaml.saml.saml2.metadata.SingleLogoutService;
 import org.opensaml.saml.saml2.metadata.SingleSignOnService;
 import org.opensaml.saml.saml2.profile.SAML2ActionTestingSupport;
@@ -137,6 +139,17 @@ public class SAML2Controller extends BaseSAMLController {
         encodeOutboundMessageContextRedirect(messageContext, servletResponse);
     }
     
+    @RequestMapping(value="/InitSSO/ReqAttr", method=RequestMethod.GET)
+    public void initSSORequestReqAttr(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
+        final AuthnRequest authnRequest = buildAuthnRequest(servletRequest);
+        authnRequest.setExtensions(buildRequestedAttributesExtensions());
+        authnRequest.setDestination(getDestinationRedirect(servletRequest, "SSO"));
+        final Endpoint endpoint = buildIdpSsoEndpoint(SAMLConstants.SAML2_REDIRECT_BINDING_URI, authnRequest.getDestination());
+        final String idpEntityID = getIdpEntityId(servletRequest);
+        final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(authnRequest, endpoint, idpEntityID);
+        encodeOutboundMessageContextRedirect(messageContext, servletResponse);
+    }
+
     @RequestMapping(value = "/InitSSO/POST/Passive", method = RequestMethod.GET) public void initSSORequestPostPassive(
             HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
         final AuthnRequest authnRequest = buildAuthnRequest(servletRequest);
@@ -403,9 +416,24 @@ public class SAML2Controller extends BaseSAMLController {
 	            authnRequest.setScoping(scoping);
 		    }
 		}
-		
 		return authnRequest;
 	}
+
+    private Extensions buildRequestedAttributesExtensions()
+    {
+        final RequestedAttribute attribute = (RequestedAttribute) builderFactory.getBuilder(
+                RequestedAttribute.DEFAULT_ELEMENT_NAME).buildObject(RequestedAttribute.DEFAULT_ELEMENT_NAME);
+        attribute.setFriendlyName("mail");
+        attribute.setName("urn:oid:0.9.2342.19200300.100.1.3");
+        attribute.setNameFormat("urn:oasis:names:tc:SAML:2.0:attrname-format:uri");
+        final RequestedAttributes attributes = (RequestedAttributes) builderFactory.getBuilder(
+                RequestedAttributes.DEFAULT_ELEMENT_NAME).buildObject(RequestedAttributes.DEFAULT_ELEMENT_NAME);
+        attributes.getRequestedAttributes().add(attribute);
+        final Extensions extensions = (Extensions) builderFactory.getBuilder(
+                Extensions.DEFAULT_ELEMENT_NAME).buildObject(Extensions.DEFAULT_ELEMENT_NAME);
+        extensions.getUnknownXMLObjects().add(attributes);
+       return extensions;
+    }
 
     private LogoutRequest buildLogoutRequest(HttpServletRequest servletRequest) {
         final LogoutRequest logoutRequest = (LogoutRequest) builderFactory.getBuilder(
