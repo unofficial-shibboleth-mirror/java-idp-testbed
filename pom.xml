@@ -194,6 +194,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>net.shibboleth.idp</groupId>
             <artifactId>idp-jetty-base</artifactId>
             <version>${idp-jetty-base.version}</version>
