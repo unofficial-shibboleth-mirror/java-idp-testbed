@@ -14,6 +14,7 @@ import javax.net.ssl.SSLContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.net.URLBuilder;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
@@ -36,6 +37,8 @@ import org.opensaml.messaging.context.InOutOperationContext;
 import org.opensaml.messaging.context.MessageContext;
 import org.opensaml.messaging.encoder.MessageEncodingException;
 import org.opensaml.saml.common.SAMLObject;
+import org.opensaml.saml.common.SAMLObjectBuilder;
+import org.opensaml.saml.common.SAMLVersion;
 import org.opensaml.saml.common.messaging.SAMLMessageSecuritySupport;
 import org.opensaml.saml.common.messaging.context.SAMLEndpointContext;
 import org.opensaml.saml.common.messaging.context.SAMLPeerEntityContext;
@@ -64,7 +67,6 @@ import org.opensaml.saml.saml2.metadata.Endpoint;
 import org.opensaml.saml.saml2.metadata.RequestedAttribute;
 import org.opensaml.saml.saml2.metadata.SingleLogoutService;
 import org.opensaml.saml.saml2.metadata.SingleSignOnService;
-import org.opensaml.saml.saml2.profile.SAML2ActionTestingSupport;
 import org.opensaml.security.SecurityException;
 import org.opensaml.security.x509.BasicX509Credential;
 import org.opensaml.soap.client.http.HttpSOAPClient;
@@ -683,18 +685,99 @@ public class SAML2Controller extends BaseSAMLController {
     @Nonnull public AttributeQuery buildSAML2AttributeQueryRequest(@Nonnull final HttpServletRequest servletRequest,
             @Nonnull final String principalName) {
 
-        final Subject subject = SAML2ActionTestingSupport.buildSubject(principalName);
+        final Subject subject = buildSubject(principalName);
 
-        final AttributeQuery attributeQuery = SAML2ActionTestingSupport.buildAttributeQueryRequest(subject);
+        final AttributeQuery attributeQuery = buildAttributeQueryRequest(subject);
         attributeQuery.setIssueInstant(new DateTime());
         attributeQuery.setID(new SecureRandomIdentifierGenerationStrategy().generateIdentifier());
-        attributeQuery.getIssuer().setValue(getSpEntityId(servletRequest));
+        attributeQuery.setIssuer(buildIssuer(getSpEntityId(servletRequest)));
 
         // TODO AttributeDesignator
 
         return attributeQuery;
     }
 
+    /**
+     * Builds a {@link Issuer}.
+     * 
+     * @param entityID the entity ID to use in the Issuer
+     * 
+     * @return the built Issuer
+     */
+    @Nonnull public static Issuer buildIssuer(final @Nonnull @NotEmpty String entityID) {
+        final SAMLObjectBuilder<Issuer> issuerBuilder = (SAMLObjectBuilder<Issuer>)
+                XMLObjectProviderRegistrySupport.getBuilderFactory().<Issuer>getBuilderOrThrow(
+                        Issuer.DEFAULT_ELEMENT_NAME);
+        final Issuer issuer = issuerBuilder.buildObject();
+        issuer.setValue(entityID);
+        return issuer;
+    }
+    
+    /**
+     * Builds a {@link Subject}. If a principal name is given a {@link NameID}, whose value is the given principal name,
+     * will be created and added to the {@link Subject}.
+     * 
+     * @param principalName the principal name to add to the subject
+     * 
+     * @return the built subject
+     */
+    @Nonnull public static Subject buildSubject(final @Nullable String principalName) {
+        final SAMLObjectBuilder<Subject> subjectBuilder = (SAMLObjectBuilder<Subject>)
+                XMLObjectProviderRegistrySupport.getBuilderFactory().<Subject>getBuilderOrThrow(
+                        Subject.DEFAULT_ELEMENT_NAME);
+        final Subject subject = subjectBuilder.buildObject();
+
+        if (principalName != null) {
+            subject.setNameID(buildNameID(principalName));
+        }
+
+        return subject;
+    }
+
+    /**
+     * Builds a {@link NameID}.
+     * 
+     * @param principalName the principal name to use in the NameID
+     * 
+     * @return the built NameID
+     */
+    @Nonnull public static NameID buildNameID(final @Nonnull @NotEmpty String principalName) {
+        final SAMLObjectBuilder<NameID> nameIdBuilder = (SAMLObjectBuilder<NameID>)
+                XMLObjectProviderRegistrySupport.getBuilderFactory().<NameID>getBuilderOrThrow(
+                        NameID.DEFAULT_ELEMENT_NAME);
+        final NameID nameId = nameIdBuilder.buildObject();
+        nameId.setValue(principalName);
+        return nameId;
+    }
+
+    /**
+     * Builds an {@link AttributeQuery}. If a {@link Subject} is given, it will be added to the constructed
+     * {@link AttributeQuery}.
+     * 
+     * @param subject the subject to add to the query
+     * 
+     * @return the built query
+     */
+    @Nonnull public static AttributeQuery buildAttributeQueryRequest(final @Nullable Subject subject) {
+        final SAMLObjectBuilder<Issuer> issuerBuilder = (SAMLObjectBuilder<Issuer>)
+                XMLObjectProviderRegistrySupport.getBuilderFactory().<Issuer>getBuilderOrThrow(
+                        Issuer.DEFAULT_ELEMENT_NAME);
+
+        final SAMLObjectBuilder<AttributeQuery> queryBuilder = (SAMLObjectBuilder<AttributeQuery>)
+                XMLObjectProviderRegistrySupport.getBuilderFactory().<AttributeQuery>getBuilderOrThrow(
+                        AttributeQuery.DEFAULT_ELEMENT_NAME);
+
+        final AttributeQuery query = queryBuilder.buildObject();
+        query.setIssueInstant(new DateTime(0));
+        query.setVersion(SAMLVersion.VERSION_20);
+
+        if (subject != null) {
+            query.setSubject(subject);
+        }
+
+        return query;
+    }
+    
     /**
      * Build a SOAP11 {@link Envelope} with the given payload.
      * 
