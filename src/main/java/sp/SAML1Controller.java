@@ -38,29 +38,30 @@ import org.w3c.dom.Element;
 @Controller
 @RequestMapping("/SAML1")
 public class SAML1Controller extends BaseSAMLController {
-    
+
     private final Logger log = LoggerFactory.getLogger(SAML1Controller.class);
-    
-    @RequestMapping(value="/POST/ACS", method=RequestMethod.POST)
-    public ResponseEntity<String> handleSSOResponsePOST(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
-        
+
+    @RequestMapping(value = "/POST/ACS", method = RequestMethod.POST) public ResponseEntity<String>
+            handleSSOResponsePOST(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
+                    throws Exception {
+
         MessageContext<SAMLObject> messageContext = decodeInboundMessageContextPost(servletRequest);
-        
+
         if (!(messageContext.getMessage() instanceof Response)) {
             log.error("Inbound message was not a SAML 1 Response");
             return new ResponseEntity<>("Inbound message was not a SAML 1 Response", HttpStatus.BAD_REQUEST);
         }
-        
+
         Response response = (Response) messageContext.getMessage();
         Element responseElement = response.getDOM();
         String formattedMessage = SerializeSupport.prettyPrintXML(responseElement);
         log.trace("Returning response" + System.lineSeparator() + "{}", formattedMessage);
-        
-        //TODO instead of returning plain text via a ResponseEntity, add a JSP view that looks good
-        
+
+        // TODO instead of returning plain text via a ResponseEntity, add a JSP view that looks good
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "text/plain");
-        
+
         return new ResponseEntity<>(formattedMessage, headers, HttpStatus.OK);
     }
 
