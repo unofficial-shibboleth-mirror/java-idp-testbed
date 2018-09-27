@@ -235,6 +235,49 @@
     <input type="submit" value="SAML2AttributeQuery">
 </form>
 </li>
+<li>SAML 1 AttributeQuery
+<form id="saml1-attribute-query" action="sp/SAML1/AttributeQuery" method="POST">
+    <table>
+        <tr>
+            <td>endpoint</td>
+            <td><input id="saml1-attribute-query-endpoint" name="endpoint" value="https://localhost:9443/idp/profile/SAML1/SOAP/AttributeQuery" size="60" /></td>
+        </tr>
+        <tr>
+            <td>principalName</td>
+            <td><input id="saml1-attribute-query-principalName" name="principalName" value="jdoe" /></td>
+        </tr>
+        <tr>
+            <td>trustedTLSCertificate</td>
+            <td><input id="saml1-attribute-query-trustedTLSCertificate" name="trustedTLSCertificate" value="classpath:/credentials/idp-backchannel.p12" size="90" /></td>
+        </tr>
+        <tr>
+            <td>trustedTLSCertificatePassword</td>
+            <td><input id="saml1-attribute-query-trustedTLSCertificatePassword" name="trustedTLSCertificatePassword" value="changeit" size="20" /></td>
+        </tr>
+        <tr>
+            <td>clientTLSCertificate</td>
+            <td><input id="saml1-attribute-query-clientTLSCertificate" name="clientTLSCertificate" value="classpath:/credentials/sp.crt" size="90" /></td>
+        </tr>
+        <tr>
+            <td>clientTLSPrivateKey</td>
+            <td><input id="saml1-attribute-query-clientTLSPrivateKey" name="clientTLSPrivateKey" value="classpath:/credentials/sp.key" size="90" /></td>
+        </tr>
+        <tr>
+            <td>clientTLSPassword</td>
+            <td><input id="saml1-attribute-query-clientTLSPassword" name="clientTLSPassword" value="secret" size="20" /></td>
+        </tr>
+        <tr>
+            <td>clientSigningCertificate</td>
+            <td><input id="saml1-attribute-query-clientSigningCertificate" name="clientSigningCertificate" value="classpath:/credentials/sp.crt" size="90" /></td>
+        </tr>
+        <tr>
+            <td>clientSigningPrivateKey</td>
+            <td><input id="saml1-attribute-query-clientSigningPrivateKey" name="clientSigningPrivateKey" value="classpath:/credentials/sp.key" size="90" /></td>
+        </tr>
+    </table>
+    <input type="submit" value="SAML1AttributeQuery">
+</form>
+</li>
 
 </ul>
 
