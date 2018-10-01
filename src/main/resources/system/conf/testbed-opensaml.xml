@@ -79,5 +79,8 @@
             </props>
         </property>
     </bean>
-    
+        
+    <bean id="shibboleth.SAMLArtifactMap"
+        class="org.opensaml.saml.common.binding.artifact.impl.BasicSAMLArtifactMap" />
+        
 </beans>

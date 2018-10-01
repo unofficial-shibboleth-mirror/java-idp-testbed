@@ -30,6 +30,7 @@ import org.opensaml.core.xml.io.MarshallerFactory;
 import org.opensaml.messaging.context.MessageContext;
 import org.opensaml.messaging.decoder.MessageDecodingException;
 import org.opensaml.saml.common.SAMLObject;
+import org.opensaml.saml.common.binding.artifact.SAMLArtifactMap;
 import org.opensaml.saml.saml2.binding.decoding.impl.HTTPPostDecoder;
 import org.opensaml.saml.saml2.binding.decoding.impl.HTTPRedirectDeflateDecoder;
 import org.opensaml.security.credential.Credential;
@@ -50,6 +51,8 @@ public abstract class BaseSAMLController {
     protected IdentifierGenerationStrategy idGenerator = new Type4UUIDIdentifierGenerationStrategy();
 
     @Autowired protected VelocityEngine velocityEngine;
+    
+    @Autowired protected SAMLArtifactMap artifactMap;
 
     @Autowired protected ParserPool parserPool;
 
