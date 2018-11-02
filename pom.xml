@@ -15,7 +15,7 @@
 
     <properties>
         <idp.groupId>net.shibboleth.idp</idp.groupId>
-        <idp.version>3.4.1-SNAPSHOT</idp.version>
+        <idp.version>3.4.2-SNAPSHOT</idp.version>
         <idp-jetty-base.version>9.3.1-SNAPSHOT</idp-jetty-base.version>
         <jetty.version>9.3.23.v20180228</jetty.version>
         <opensaml.groupId>org.opensaml</opensaml.groupId>
