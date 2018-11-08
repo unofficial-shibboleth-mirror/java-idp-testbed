@@ -3,6 +3,7 @@
 	<name>java-idp-testbed</name>
 	<comment></comment>
 	<projects>
+		<project>java-idp-jetty-base</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

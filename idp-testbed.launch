@@ -13,6 +13,6 @@
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--lib=${workspace_loc:idp-conf/src/test/resources} --lib=${workspace_loc:idp-conf/src/main/resources}"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="java-idp-testbed"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Djetty.home=/opt/jetty/jetty-9.3 -Didp.home=classpath: -Didp.webflows=classpath*:/flows -Didp.logfiles=${workspace_loc:java-idp-testbed/src/main/resources/logs} -Djava.io.tmpdir=tmp"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Djetty.home=/opt/jetty/jetty-9.3 -Didp.home=classpath: -Didp.webflows=classpath*:/flows -Didp.logfiles=${workspace_loc:java-idp-testbed/src/main/resources/logs} -Djava.io.tmpdir=tmp -Didp.loglevel.idp=INFO"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:idp-jetty-base/src/main/resources/jetty-base}"/>
 </launchConfiguration>

@@ -22,17 +22,8 @@
             p:coalescing="true"
             p:ignoreComments="true"
             p:ignoreElementContentWhitespace="true"
-            p:namespaceAware="true">
-        <property name="builderAttributes">
-            <map>
-                <entry>
-                    <key>
-                        <value>http://apache.org/xml/properties/security-manager</value>
-                    </key>
-                    <bean id="shibboleth.XercesSecurityManager" class="${idp.xml.securityManager:com.sun.org.apache.xerces.internal.util.SecurityManager}" />
-                </entry>
-            </map>
-        </property>
+            p:namespaceAware="true"
+            p:securityManagerAttributeName="http://apache.org/xml/properties/security-manager">
         <property name="builderFeatures">
             <map>
                 <entry>
@@ -55,17 +46,16 @@
     <bean id="shibboleth.MarshallerFactory" factory-method="getMarshallerFactory" class="org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport" depends-on="shibboleth.OpenSAMLConfig" />
     <bean id="shibboleth.UnmarshallerFactory" factory-method="getUnmarshallerFactory" class="org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport" depends-on="shibboleth.OpenSAMLConfig" />
     
-    <bean id="shibboleth.VelocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean" >
-        <property name="overrideLogging" value="false"/>
+    <bean id="shibboleth.VelocityEngine" class="net.shibboleth.ext.spring.velocity.VelocityEngineFactoryBean">
         <property name="velocityProperties">
             <props>
-                <prop key="runtime.log.logsystem.class">
-                    net.shibboleth.utilities.java.support.velocity.SLF4JLogChute
-                </prop>
                 <prop key="input.encoding">UTF-8</prop>
                 <prop key="output.encoding">UTF-8</prop>
-                <prop key="resource.loader">classpath, string</prop>
+                <prop key="resource.loader">file, classpath, string, springMacro</prop>
                 <prop key="classpath.resource.loader.class">
+                    org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+                </prop>
+                <prop key="springMacro.resource.loader.class">
                     org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
                 </prop>
                 <prop key="string.resource.loader.class">
@@ -74,7 +64,10 @@
                 <prop key="file.resource.loader.class">
                     org.apache.velocity.runtime.resource.loader.FileResourceLoader
                 </prop>
-                <prop key="file.resource.loader.path">${idp.home}</prop>
+                <prop key="velocimacro.library">
+                    net/shibboleth/ext/spring/velocity/spring.vm
+                </prop>
+                <prop key="file.resource.loader.path">#{'%{idp.views:%{idp.home}/views}'.trim()},%{idp.home}/system/views</prop>
                 <prop key="file.resource.loader.cache">false</prop>
             </props>
         </property>
