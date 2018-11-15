@@ -50,6 +50,7 @@ import org.opensaml.saml.ext.saml2aslo.Asynchronous;
 import org.opensaml.saml.saml2.binding.encoding.impl.HTTPArtifactEncoder;
 import org.opensaml.saml.saml2.binding.encoding.impl.HTTPPostEncoder;
 import org.opensaml.saml.saml2.binding.encoding.impl.HTTPRedirectDeflateEncoder;
+import org.opensaml.saml.saml2.binding.encoding.impl.HTTPSOAP11Encoder;
 import org.opensaml.saml.saml2.core.AttributeQuery;
 import org.opensaml.saml.saml2.core.AuthnContextClassRef;
 import org.opensaml.saml.saml2.core.AuthnRequest;
@@ -59,6 +60,7 @@ import org.opensaml.saml.saml2.core.LogoutRequest;
 import org.opensaml.saml.saml2.core.LogoutResponse;
 import org.opensaml.saml.saml2.core.NameID;
 import org.opensaml.saml.saml2.core.NameIDPolicy;
+import org.opensaml.saml.saml2.core.RequestAbstractType;
 import org.opensaml.saml.saml2.core.RequestedAuthnContext;
 import org.opensaml.saml.saml2.core.RequesterID;
 import org.opensaml.saml.saml2.core.Response;
@@ -262,6 +264,17 @@ public class SAML2Controller extends BaseSAMLController {
         SAMLMessageSecuritySupport.signMessage(messageContext);
         encodeOutboundMessageContextPost(messageContext, servletResponse);
     }
+
+    @RequestMapping(value="/FinishSLO/SOAP", method=RequestMethod.GET)
+    public void finishSLOResponseSOAP(HttpServletRequest servletRequest, HttpServletResponse servletResponse, final String id) throws Exception {
+        final LogoutResponse logoutResponse = buildLogoutResponse(servletRequest);
+        logoutResponse.setInResponseTo(id);
+        final String spEntityID = getSpEntityId(servletRequest);
+        final String idpEntityID = getIdpEntityId(servletRequest);
+        final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(logoutResponse, null, spEntityID, idpEntityID);
+        SAMLMessageSecuritySupport.signMessage(messageContext);
+        encodeOutboundMessageContextSOAP(messageContext, servletResponse);
+    }
     
 	@RequestMapping(value="/POST/ACS", method=RequestMethod.POST)
 	public ResponseEntity<String> handleSSOResponsePOST(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
@@ -329,7 +342,29 @@ public class SAML2Controller extends BaseSAMLController {
         return new ResponseEntity<>(formattedMessage, headers, HttpStatus.OK);
     }
     
-	private MessageContext<SAMLObject> buildOutboundMessageContext(SAMLObject message, Endpoint endpoint, String spEntityId, String idpEntityId) {
+    @RequestMapping(value="/SOAP/SLO", method=RequestMethod.POST)
+    public ResponseEntity<String> handleSLOResponseSOAP(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
+        final MessageContext<SAMLObject> messageContext = decodeInboundMessageContextSOAP(servletRequest);
+        
+        if (messageContext.getMessage() instanceof LogoutRequest) {
+            servletRequest.setAttribute("success", "1");
+            finishSLOResponseSOAP(servletRequest, servletResponse, ((LogoutRequest) messageContext.getMessage()).getID());
+            return null;
+        }
+        
+        final XMLObject msg = messageContext.getMessage();
+        final Element responseElement = msg.getDOM();
+        final String formattedMessage = SerializeSupport.prettyPrintXML(responseElement);
+        
+        //TODO instead of returning plain text via a ResponseEntity, add a JSP view that looks good
+        
+        final HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "text/plain");
+        
+        return new ResponseEntity<>(formattedMessage, headers, HttpStatus.OK);
+    }
+
+    private MessageContext<SAMLObject> buildOutboundMessageContext(SAMLObject message, Endpoint endpoint, String spEntityId, String idpEntityId) {
 		MessageContext<SAMLObject> messageContext = new MessageContext<>();
 		messageContext.setMessage(message);
 
@@ -339,8 +374,10 @@ public class SAML2Controller extends BaseSAMLController {
 		SAMLPeerEntityContext peerContext = messageContext.getSubcontext(SAMLPeerEntityContext.class, true);
 		peerContext.setEntityId(idpEntityId);
 		
-		SAMLEndpointContext endpointContext = peerContext.getSubcontext(SAMLEndpointContext.class, true);
-		endpointContext.setEndpoint(endpoint);
+		if (endpoint != null) {
+		    SAMLEndpointContext endpointContext = peerContext.getSubcontext(SAMLEndpointContext.class, true);
+		    endpointContext.setEndpoint(endpoint);
+		}
 		
 		SAMLArtifactContext artifactContext = messageContext.getSubcontext(SAMLArtifactContext.class, true);
 		artifactContext.setSourceArtifactResolutionServiceEndpointIndex(1);
@@ -409,6 +446,23 @@ public class SAML2Controller extends BaseSAMLController {
             encoder.destroy();
         }
     }
+   
+   private void encodeOutboundMessageContextSOAP(MessageContext<SAMLObject> messageContext, HttpServletResponse servletResponse) throws Exception {
+       HTTPSOAP11Encoder encoder = new HTTPSOAP11Encoder();
+       try {
+           encoder.setHttpServletResponse(servletResponse);
+           encoder.setMessageContext(messageContext);
+           encoder.initialize();
+           
+           encoder.prepareContext();
+           encoder.encode();
+       } catch (final ComponentInitializationException | MessageEncodingException e) {
+           log.error("Error encoding the outbound message context", e);
+           throw e;
+       } finally {
+           encoder.destroy();
+       }
+   }
 
 	private SingleSignOnService buildIdpSsoEndpoint(String binding, String destination) {
 		final SingleSignOnService ssoEndpoint = (SingleSignOnService) builderFactory.getBuilder(
