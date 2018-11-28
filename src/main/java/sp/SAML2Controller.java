@@ -203,7 +203,7 @@ public class SAML2Controller extends BaseSAMLController {
     
     @RequestMapping(value="/InitSLO/Redirect", method=RequestMethod.GET)
     public void initSLORequestRedirect(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
-        final LogoutRequest logoutRequest = buildLogoutRequest(servletRequest);
+        final LogoutRequest logoutRequest = buildLogoutRequest(servletRequest, servletRequest.getParameter("transientID"));
         logoutRequest.setDestination(getDestinationRedirect(servletRequest, "SLO"));
         final Endpoint endpoint = buildIdpSsoEndpoint(SAMLConstants.SAML2_REDIRECT_BINDING_URI, logoutRequest.getDestination());
         final String spEntityID = getSpEntityId(servletRequest);
@@ -214,7 +214,7 @@ public class SAML2Controller extends BaseSAMLController {
 
     @RequestMapping(value="/InitSLO/Async", method=RequestMethod.GET)
     public void initSLORequestAsync(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
-        final LogoutRequest logoutRequest = buildLogoutRequest(servletRequest);
+        final LogoutRequest logoutRequest = buildLogoutRequest(servletRequest, servletRequest.getParameter("transientID"));
         logoutRequest.setDestination(getDestinationRedirect(servletRequest, "SLO"));
         
         final Extensions exts = (Extensions) builderFactory.getBuilder(Extensions.DEFAULT_ELEMENT_NAME)
@@ -232,7 +232,7 @@ public class SAML2Controller extends BaseSAMLController {
     
     @RequestMapping(value="/InitSLO/POST", method=RequestMethod.GET)
     public void initSLORequestPost(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
-        final LogoutRequest logoutRequest = buildLogoutRequest(servletRequest);
+        final LogoutRequest logoutRequest = buildLogoutRequest(servletRequest, servletRequest.getParameter("transientID"));
         logoutRequest.setDestination(getDestinationPost(servletRequest, "SLO"));
         final Endpoint endpoint = buildIdpSloEndpoint(SAMLConstants.SAML2_POST_BINDING_URI, logoutRequest.getDestination());
         final String spEntityID = getSpEntityId(servletRequest);
@@ -542,7 +542,7 @@ public class SAML2Controller extends BaseSAMLController {
        return extensions;
     }
 
-    private LogoutRequest buildLogoutRequest(HttpServletRequest servletRequest) {
+    private LogoutRequest buildLogoutRequest(HttpServletRequest servletRequest, String principalName) {
         final LogoutRequest logoutRequest = (LogoutRequest) builderFactory.getBuilder(
                 LogoutRequest.DEFAULT_ELEMENT_NAME).buildObject(LogoutRequest.DEFAULT_ELEMENT_NAME);
         
@@ -555,7 +555,7 @@ public class SAML2Controller extends BaseSAMLController {
         logoutRequest.setIssuer(issuer);
         
         final NameID nameID = (NameID) builderFactory.getBuilder(NameID.DEFAULT_ELEMENT_NAME).buildObject(NameID.DEFAULT_ELEMENT_NAME);
-        nameID.setValue(servletRequest.getParameter("transientID"));
+        nameID.setValue(principalName);
         nameID.setFormat(NameID.TRANSIENT);
         nameID.setSPNameQualifier(getSpEntityId(servletRequest));
         nameID.setNameQualifier(getIdpEntityId(servletRequest));
@@ -717,6 +717,82 @@ public class SAML2Controller extends BaseSAMLController {
         headers.add("Content-Type", "text/plain");
         return new ResponseEntity<>(formattedMessage, headers, HttpStatus.OK);
     }
+    
+    /**
+     * Send a SAML 2 logout request.
+     * 
+     * @param servletRequest the servlet request
+     * @param servletResponse the servlet response
+     * @param endpoint the endpoint to send the logout request to
+     * @param principalName the name of the principal to logout
+     * @param trustedCertificate the trusted IdP public certificate
+     * @param trustedCertificatePassword the IdP certificate password
+     * @param clientCertificate the SP public certificate
+     * @param clientKey the SP private key
+     * @param clientPassword the SP password
+     * @return the SAML 2 logout response is displayed
+     * @throws Exception if an error occurs
+     */
+    @RequestMapping(value = "/InitSLO/SOAP", method = RequestMethod.POST) public ResponseEntity<String>
+            initSAML2LogoutRequest(HttpServletRequest servletRequest, HttpServletResponse servletResponse,
+                    @RequestParam(value = "endpoint", required = true) String endpoint,
+                    @RequestParam(value = "principalName", required = true) String principalName,
+                    @RequestParam(value = "trustedTLSCertificate", required = true) String trustedTLSCertificate,
+                    @RequestParam(value = "trustedTLSCertificatePassword", required = true) String trustedTLSCertificatePassword,
+                    @RequestParam(value = "clientTLSCertificate", required = false) String clientTLSCertificate,
+                    @RequestParam(value = "clientTLSPrivateKey", required = true) String clientTLSPrivateKey,
+                    @RequestParam(value = "clientTLSPassword", required = true) String clientTLSPassword,
+                    @RequestParam(value = "clientSigningCertificate", required = false) String clientSigningCertificate,
+                    @RequestParam(value = "clientSigningPrivateKey", required = false) String clientSigningPrivateKey)
+                    throws Exception {
+
+        final Resource trustedTLSCertificateResource = applicationContext.getResource(trustedTLSCertificate);
+        log.debug("Trusted TLS certificate resource '{}'", trustedTLSCertificateResource);
+
+        Resource clientTLSCertificateResource = null;
+        if (StringSupport.trimOrNull(clientTLSCertificate) != null) {
+            clientTLSCertificateResource = applicationContext.getResource(clientTLSCertificate);
+        }
+        log.debug("Client TLS certificate resource '{}'", clientTLSCertificateResource);
+
+        final Resource clientTLSPrivateKeyResource = applicationContext.getResource(clientTLSPrivateKey);
+        log.debug("Client TLS private key resource '{}'", clientTLSPrivateKeyResource);
+
+        final HttpClient httpClient = buildHttpClient(trustedTLSCertificateResource, trustedTLSCertificatePassword,
+                clientTLSCertificateResource, clientTLSPrivateKeyResource, clientTLSPassword);
+
+        final HttpSOAPClient httpSoapClient = new HttpSOAPClient();
+        httpSoapClient.setParserPool(parserPool);
+        httpSoapClient.setHttpClient(httpClient);
+
+        final LogoutRequest logoutRequest = buildLogoutRequest(servletRequest, principalName);
+
+        // Sign if client signing certificate is present
+        if (StringSupport.trimOrNull(clientSigningCertificate) != null) {
+            sign(logoutRequest, clientSigningCertificate, clientSigningPrivateKey);
+        }
+
+        final Envelope envelope = buildSOAP11Envelope(logoutRequest);
+
+        if (log.isDebugEnabled()) {
+            log.debug("Sending LogoutRequest to endpoint '{}':\n", endpoint, SerializeSupport.prettyPrintXML(
+                    marshallerFactory.getMarshaller(envelope).marshall(envelope, parserPool.newDocument())));
+        }
+
+        final InOutOperationContext context = buildInOutOperationContext(envelope);
+
+        httpSoapClient.send(endpoint, context);
+
+        final Envelope soapResponse =
+                context.getInboundMessageContext().getSubcontext(SOAP11Context.class).getEnvelope();
+
+        final String formattedMessage = SerializeSupport.prettyPrintXML(soapResponse.getDOM());
+
+        final HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "text/plain");
+
+        return new ResponseEntity<>(formattedMessage, headers, HttpStatus.OK);
+    }    
 
     /**
      * Send a SAML 2 attribute query.
