@@ -194,6 +194,49 @@
 </form>
 </li> 
 <li><a href="idp/profile/cas/login?service=https://localhost:8443/sp/CAS/Service">idp/profile/cas/login?service=foo</a></li>
+<li>SAML 2 SOAP Logout
+<form id="saml2-soap-logout" action="sp/SAML2/InitSLO/SOAP" method="POST">
+    <table>
+        <tr>
+            <td>endpoint</td>
+            <td><input id="saml2-soap-logout-endpoint" name="endpoint" value="https://localhost:9443/idp/profile/SAML2/SOAP/SLO" size="60" /></td>
+        </tr>
+        <tr>
+            <td>principalName</td>
+            <td><input id="saml2-soap-logout-principalName" name="principalName" value="jdoe" /></td>
+        </tr>
+        <tr>
+            <td>trustedTLSCertificate</td>
+            <td><input id="saml2-soap-logout-trustedTLSCertificate" name="trustedTLSCertificate" value="classpath:/credentials/idp-backchannel.p12" size="90" /></td>
+        </tr>
+        <tr>
+            <td>trustedTLSCertificatePassword</td>
+            <td><input id="saml2-soap-logout-trustedTLSCertificatePassword" name="trustedTLSCertificatePassword" value="changeit" size="20" /></td>
+        </tr>
+        <tr>
+            <td>clientTLSCertificate</td>
+            <td><input id="saml2-soap-logout-clientTLSCertificate" name="clientTLSCertificate" value="classpath:/credentials/sp.crt" size="90" /></td>
+        </tr>
+        <tr>
+            <td>clientTLSPrivateKey</td>
+            <td><input id="saml2-soap-logout-clientTLSPrivateKey" name="clientTLSPrivateKey" value="classpath:/credentials/sp.key" size="90" /></td>
+        </tr>
+        <tr>
+            <td>clientTLSPassword</td>
+            <td><input id="saml2-soap-logout-clientTLSPassword" name="clientTLSPassword" value="secret" size="20" /></td>
+        </tr>
+        <tr>
+            <td>clientSigningCertificate</td>
+            <td><input id="saml2-soap-logout-clientSigningCertificate" name="clientSigningCertificate" value="classpath:/credentials/sp.crt" size="90" /></td>
+        </tr>
+        <tr>
+            <td>clientSigningPrivateKey</td>
+            <td><input id="saml2-soap-logout-clientSigningPrivateKey" name="clientSigningPrivateKey" value="classpath:/credentials/sp.key" size="90" /></td>
+        </tr>
+    </table>
+    <input type="submit" value="SAML2SOAPLogout">
+</form>
+</li>
 <li>SAML 2 AttributeQuery
 <form id="saml2-attribute-query" action="sp/SAML2/AttributeQuery" method="POST">
     <table>
