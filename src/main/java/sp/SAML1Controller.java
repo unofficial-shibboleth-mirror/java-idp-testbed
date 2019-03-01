@@ -22,6 +22,7 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.time.Instant;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -42,7 +43,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.cryptacular.util.CertUtil;
 import org.cryptacular.util.KeyPairUtil;
-import org.joda.time.DateTime;
 import org.opensaml.core.xml.XMLObject;
 import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
 import org.opensaml.core.xml.io.MarshallingException;
@@ -223,7 +223,7 @@ public class SAML1Controller extends BaseSAMLController {
         final Subject subject = buildSubject(principalName);
 
         final Request attributeQuery = buildAttributeQueryRequest(subject);
-        attributeQuery.setIssueInstant(new DateTime());
+        attributeQuery.setIssueInstant(Instant.now());
         attributeQuery.setID(new SecureRandomIdentifierGenerationStrategy().generateIdentifier());
         attributeQuery.getAttributeQuery().setResource(getSpEntityId(servletRequest));
 
@@ -281,7 +281,7 @@ public class SAML1Controller extends BaseSAMLController {
                         Request.DEFAULT_ELEMENT_NAME);
         final Request request = requestBuilder.buildObject();
         request.setID(new SecureRandomIdentifierGenerationStrategy().generateIdentifier());
-        request.setIssueInstant(new DateTime(0));
+        request.setIssueInstant(Instant.now());
         request.setQuery(query);
         request.setVersion(SAMLVersion.VERSION_11);
 

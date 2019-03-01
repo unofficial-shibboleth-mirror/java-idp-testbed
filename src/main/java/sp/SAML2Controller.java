@@ -6,6 +6,7 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.time.Instant;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -29,7 +30,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.cryptacular.util.CertUtil;
 import org.cryptacular.util.KeyPairUtil;
-import org.joda.time.DateTime;
 import org.opensaml.core.xml.XMLObject;
 import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
 import org.opensaml.core.xml.io.MarshallingException;
@@ -485,7 +485,7 @@ public class SAML2Controller extends BaseSAMLController {
 		        AuthnRequest.DEFAULT_ELEMENT_NAME).buildObject(AuthnRequest.DEFAULT_ELEMENT_NAME);
 		
 		authnRequest.setID(idGenerator.generateIdentifier());
-		authnRequest.setIssueInstant(new DateTime());
+		authnRequest.setIssueInstant(Instant.now());
 		authnRequest.setAssertionConsumerServiceURL(getAcsUrl(servletRequest));
 		authnRequest.setProtocolBinding(SAMLConstants.SAML2_POST_BINDING_URI);
 		
@@ -547,7 +547,7 @@ public class SAML2Controller extends BaseSAMLController {
                 LogoutRequest.DEFAULT_ELEMENT_NAME).buildObject(LogoutRequest.DEFAULT_ELEMENT_NAME);
         
         logoutRequest.setID(idGenerator.generateIdentifier());
-        logoutRequest.setIssueInstant(new DateTime());
+        logoutRequest.setIssueInstant(Instant.now());
         
         final Issuer issuer = (Issuer) builderFactory.getBuilder(
                 Issuer.DEFAULT_ELEMENT_NAME).buildObject(Issuer.DEFAULT_ELEMENT_NAME);
@@ -569,7 +569,7 @@ public class SAML2Controller extends BaseSAMLController {
                 LogoutResponse.DEFAULT_ELEMENT_NAME).buildObject(LogoutResponse.DEFAULT_ELEMENT_NAME);
         
         logoutResponse.setID(idGenerator.generateIdentifier());
-        logoutResponse.setIssueInstant(new DateTime());
+        logoutResponse.setIssueInstant(Instant.now());
         
         final Issuer issuer = (Issuer) builderFactory.getBuilder(Issuer.DEFAULT_ELEMENT_NAME).buildObject(Issuer.DEFAULT_ELEMENT_NAME);
         issuer.setValue(getSpEntityId(servletRequest));
@@ -883,7 +883,7 @@ public class SAML2Controller extends BaseSAMLController {
         final Subject subject = buildSubject(principalName);
 
         final AttributeQuery attributeQuery = buildAttributeQueryRequest(subject);
-        attributeQuery.setIssueInstant(new DateTime());
+        attributeQuery.setIssueInstant(Instant.now());
         attributeQuery.setID(new SecureRandomIdentifierGenerationStrategy().generateIdentifier());
         attributeQuery.setIssuer(buildIssuer(getSpEntityId(servletRequest)));
 
@@ -954,16 +954,12 @@ public class SAML2Controller extends BaseSAMLController {
      * @return the built query
      */
     @Nonnull public static AttributeQuery buildAttributeQueryRequest(final @Nullable Subject subject) {
-        final SAMLObjectBuilder<Issuer> issuerBuilder = (SAMLObjectBuilder<Issuer>)
-                XMLObjectProviderRegistrySupport.getBuilderFactory().<Issuer>getBuilderOrThrow(
-                        Issuer.DEFAULT_ELEMENT_NAME);
-
         final SAMLObjectBuilder<AttributeQuery> queryBuilder = (SAMLObjectBuilder<AttributeQuery>)
                 XMLObjectProviderRegistrySupport.getBuilderFactory().<AttributeQuery>getBuilderOrThrow(
                         AttributeQuery.DEFAULT_ELEMENT_NAME);
 
         final AttributeQuery query = queryBuilder.buildObject();
-        query.setIssueInstant(new DateTime(0));
+        query.setIssueInstant(Instant.now());
         query.setVersion(SAMLVersion.VERSION_20);
 
         if (subject != null) {
