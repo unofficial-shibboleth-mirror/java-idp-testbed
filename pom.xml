@@ -20,7 +20,6 @@
         <jetty.version>9.3.23.v20180228</jetty.version>
         <opensaml.groupId>org.opensaml</opensaml.groupId>
         <opensaml.version>3.4.3-SNAPSHOT</opensaml.version>
-        <spring-extensions.version>5.4.2-SNAPSHOT</spring-extensions.version>
      </properties>
 
     <repositories>
@@ -40,6 +39,39 @@
         </repository>
     </repositories>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml-bom</artifactId>
+                <version>${opensaml.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml-tests-bom</artifactId>
+                <version>${opensaml.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.shibboleth.idp</groupId>
+                <artifactId>idp-bom</artifactId>
+                <version>${idp.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <!-- Compile scope -->
         <dependency>
@@ -51,79 +83,66 @@
         <dependency>
             <groupId>${idp.groupId}</groupId>
             <artifactId>idp-conf</artifactId>
-            <version>${idp.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${idp.groupId}</groupId>
             <artifactId>idp-profile-impl</artifactId>
-            <version>${idp.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${idp.groupId}</groupId>
             <artifactId>idp-profile-spring</artifactId>
-            <version>${idp.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${idp.groupId}</groupId>
             <artifactId>idp-attribute-filter-spring</artifactId>
-            <version>${idp.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${idp.groupId}</groupId>
             <artifactId>idp-attribute-resolver-spring</artifactId>
-            <version>${idp.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${idp.groupId}</groupId>
             <artifactId>idp-authn-impl</artifactId>
-            <version>${idp.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${idp.groupId}</groupId>
             <artifactId>idp-session-impl</artifactId>
-            <version>${idp.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${idp.groupId}</groupId>
             <artifactId>idp-cas-impl</artifactId>
-            <version>${idp.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${idp.groupId}</groupId>
             <artifactId>idp-saml-impl</artifactId>
-            <version>${idp.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${opensaml.groupId}</groupId>
             <artifactId>opensaml-saml-impl</artifactId>
-            <version>${opensaml.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${opensaml.groupId}</groupId>
             <artifactId>opensaml-xmlsec-impl</artifactId>
-            <version>${opensaml.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${opensaml.groupId}</groupId>
             <artifactId>opensaml-messaging-impl</artifactId>
-            <version>${opensaml.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${opensaml.groupId}</groupId>
             <artifactId>opensaml-profile-impl</artifactId>
-            <version>${opensaml.version}</version>
         </dependency>
 
         <dependency>
@@ -136,13 +155,6 @@
         <dependency>
             <groupId>${opensaml.groupId}</groupId>
             <artifactId>opensaml-storage-impl</artifactId>
-            <version>${opensaml.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.shibboleth.ext</groupId>
-            <artifactId>spring-extensions</artifactId>
-            <version>${spring-extensions.version}</version>
         </dependency>
 
         <dependency>
@@ -210,21 +222,18 @@
         <dependency>
             <groupId>${idp.groupId}</groupId>
             <artifactId>idp-admin-impl</artifactId>
-            <version>${idp.version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>${idp.groupId}</groupId>
             <artifactId>idp-consent-impl</artifactId>
-            <version>${idp.version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>${idp.groupId}</groupId>
             <artifactId>idp-ui</artifactId>
-            <version>${idp.version}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -235,6 +244,11 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>net.shibboleth.ext</groupId>
+            <artifactId>spring-extensions</artifactId>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
             <groupId>net.shibboleth.utilities.jetty9</groupId>
             <artifactId>jetty9-dta-ssl</artifactId>
