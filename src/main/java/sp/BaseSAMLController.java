@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.security.IdentifierGenerationStrategy;
-import net.shibboleth.utilities.java.support.security.Type4UUIDIdentifierGenerationStrategy;
+import net.shibboleth.utilities.java.support.security.impl.Type4UUIDIdentifierGenerationStrategy;
 import net.shibboleth.utilities.java.support.xml.ParserPool;
 
 import org.apache.velocity.app.VelocityEngine;
