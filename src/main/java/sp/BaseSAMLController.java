@@ -29,7 +29,6 @@ import org.opensaml.core.xml.XMLObjectBuilderFactory;
 import org.opensaml.core.xml.io.MarshallerFactory;
 import org.opensaml.messaging.context.MessageContext;
 import org.opensaml.messaging.decoder.MessageDecodingException;
-import org.opensaml.saml.common.SAMLObject;
 import org.opensaml.saml.common.binding.artifact.SAMLArtifactMap;
 import org.opensaml.saml.saml2.binding.decoding.impl.HTTPPostDecoder;
 import org.opensaml.saml.saml2.binding.decoding.impl.HTTPRedirectDeflateDecoder;
@@ -61,7 +60,7 @@ public abstract class BaseSAMLController {
     
     @Autowired protected ApplicationContext applicationContext;
     
-    protected MessageContext<SAMLObject> decodeInboundMessageContextPost(HttpServletRequest servletRequest)
+    protected MessageContext decodeInboundMessageContextPost(HttpServletRequest servletRequest)
             throws Exception {
         HTTPPostDecoder decoder = new HTTPPostDecoder();
         try {
@@ -80,7 +79,7 @@ public abstract class BaseSAMLController {
         }
     }
 
-    protected MessageContext<SAMLObject> decodeInboundMessageContextSOAP(HttpServletRequest servletRequest)
+    protected MessageContext decodeInboundMessageContextSOAP(HttpServletRequest servletRequest)
             throws Exception {
         HTTPSOAP11Decoder decoder = new HTTPSOAP11Decoder();
         try {
@@ -99,7 +98,7 @@ public abstract class BaseSAMLController {
         }
     }
     
-    protected MessageContext<SAMLObject> decodeInboundMessageContextRedirect(HttpServletRequest servletRequest)
+    protected MessageContext decodeInboundMessageContextRedirect(HttpServletRequest servletRequest)
             throws Exception {
         HTTPRedirectDeflateDecoder decoder = new HTTPRedirectDeflateDecoder();
         try {

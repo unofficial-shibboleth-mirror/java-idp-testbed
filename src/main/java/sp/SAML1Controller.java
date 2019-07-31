@@ -48,7 +48,6 @@ import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
 import org.opensaml.core.xml.io.MarshallingException;
 import org.opensaml.messaging.context.InOutOperationContext;
 import org.opensaml.messaging.context.MessageContext;
-import org.opensaml.saml.common.SAMLObject;
 import org.opensaml.saml.common.SAMLObjectBuilder;
 import org.opensaml.saml.common.SAMLVersion;
 import org.opensaml.saml.saml1.core.AttributeQuery;
@@ -90,7 +89,7 @@ public class SAML1Controller extends BaseSAMLController {
             handleSSOResponsePOST(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
                     throws Exception {
 
-        MessageContext<SAMLObject> messageContext = decodeInboundMessageContextPost(servletRequest);
+        MessageContext messageContext = decodeInboundMessageContextPost(servletRequest);
 
         if (!(messageContext.getMessage() instanceof Response)) {
             log.error("Inbound message was not a SAML 1 Response");

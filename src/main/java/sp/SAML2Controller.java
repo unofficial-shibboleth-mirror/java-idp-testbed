@@ -60,7 +60,6 @@ import org.opensaml.saml.saml2.core.LogoutRequest;
 import org.opensaml.saml.saml2.core.LogoutResponse;
 import org.opensaml.saml.saml2.core.NameID;
 import org.opensaml.saml.saml2.core.NameIDPolicy;
-import org.opensaml.saml.saml2.core.RequestAbstractType;
 import org.opensaml.saml.saml2.core.RequestedAuthnContext;
 import org.opensaml.saml.saml2.core.RequesterID;
 import org.opensaml.saml.saml2.core.Response;
@@ -110,7 +109,7 @@ public class SAML2Controller extends BaseSAMLController {
 		final Endpoint endpoint = buildIdpSsoEndpoint(SAMLConstants.SAML2_REDIRECT_BINDING_URI, authnRequest.getDestination());
         final String spEntityID = getSpEntityId(servletRequest);
 		final String idpEntityID = getIdpEntityId(servletRequest);
-		final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
+		final MessageContext messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
 		encodeOutboundMessageContextRedirect(messageContext, servletResponse);
 	}
 
@@ -121,7 +120,7 @@ public class SAML2Controller extends BaseSAMLController {
 		final Endpoint endpoint = buildIdpSsoEndpoint(SAMLConstants.SAML2_POST_BINDING_URI, authnRequest.getDestination());
         final String spEntityID = getSpEntityId(servletRequest);
         final String idpEntityID = getIdpEntityId(servletRequest);
-        final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
+        final MessageContext messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
 		SAMLMessageSecuritySupport.signMessage(messageContext);
 		encodeOutboundMessageContextPost(messageContext, servletResponse);
 	}
@@ -133,7 +132,7 @@ public class SAML2Controller extends BaseSAMLController {
         final Endpoint endpoint = buildIdpSsoEndpoint(SAMLConstants.SAML2_ARTIFACT_BINDING_URI, authnRequest.getDestination());
         final String spEntityID = getSpEntityId(servletRequest);
         final String idpEntityID = getIdpEntityId(servletRequest);
-        final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
+        final MessageContext messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
         encodeOutboundMessageContextArtifact(messageContext, servletResponse);
     }
 
@@ -145,7 +144,7 @@ public class SAML2Controller extends BaseSAMLController {
         final Endpoint endpoint = buildIdpSsoEndpoint(SAMLConstants.SAML2_REDIRECT_BINDING_URI, authnRequest.getDestination());
         final String spEntityID = getSpEntityId(servletRequest);
         final String idpEntityID = getIdpEntityId(servletRequest);
-        final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
+        final MessageContext messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
         encodeOutboundMessageContextRedirect(messageContext, servletResponse);
     }
 
@@ -157,7 +156,7 @@ public class SAML2Controller extends BaseSAMLController {
         final Endpoint endpoint = buildIdpSsoEndpoint(SAMLConstants.SAML2_REDIRECT_BINDING_URI, authnRequest.getDestination());
         final String spEntityID = getSpEntityId(servletRequest);
         final String idpEntityID = getIdpEntityId(servletRequest);
-        final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
+        final MessageContext messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
         encodeOutboundMessageContextRedirect(messageContext, servletResponse);
     }
     
@@ -169,7 +168,7 @@ public class SAML2Controller extends BaseSAMLController {
         final Endpoint endpoint = buildIdpSsoEndpoint(SAMLConstants.SAML2_REDIRECT_BINDING_URI, authnRequest.getDestination());
         final String spEntityID = getSpEntityId(servletRequest);
         final String idpEntityID = getIdpEntityId(servletRequest);
-        final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
+        final MessageContext messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
         encodeOutboundMessageContextRedirect(messageContext, servletResponse);
     }
 
@@ -181,7 +180,7 @@ public class SAML2Controller extends BaseSAMLController {
         final Endpoint endpoint = buildIdpSsoEndpoint(SAMLConstants.SAML2_POST_BINDING_URI, authnRequest.getDestination());
         final String spEntityID = getSpEntityId(servletRequest);
         final String idpEntityID = getIdpEntityId(servletRequest);
-        final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
+        final MessageContext messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
         SAMLMessageSecuritySupport.signMessage(messageContext);
         encodeOutboundMessageContextPost(messageContext, servletResponse);
     }
@@ -195,7 +194,7 @@ public class SAML2Controller extends BaseSAMLController {
         final Endpoint endpoint = buildIdpSsoEndpoint(SAMLConstants.SAML2_POST_BINDING_URI, authnRequest.getDestination());
         final String spEntityID = getSpEntityId(servletRequest);
         final String idpEntityID = getIdpEntityId(servletRequest);
-        final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
+        final MessageContext messageContext = buildOutboundMessageContext(authnRequest, endpoint, spEntityID, idpEntityID);
 
         SAMLMessageSecuritySupport.signMessage(messageContext);
         encodeOutboundMessageContextPost(messageContext, servletResponse);
@@ -208,7 +207,7 @@ public class SAML2Controller extends BaseSAMLController {
         final Endpoint endpoint = buildIdpSsoEndpoint(SAMLConstants.SAML2_REDIRECT_BINDING_URI, logoutRequest.getDestination());
         final String spEntityID = getSpEntityId(servletRequest);
         final String idpEntityID = getIdpEntityId(servletRequest);
-        final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(logoutRequest, endpoint, spEntityID, idpEntityID);
+        final MessageContext messageContext = buildOutboundMessageContext(logoutRequest, endpoint, spEntityID, idpEntityID);
         encodeOutboundMessageContextRedirect(messageContext, servletResponse);
     }
 
@@ -226,7 +225,7 @@ public class SAML2Controller extends BaseSAMLController {
         final Endpoint endpoint = buildIdpSloEndpoint(SAMLConstants.SAML2_REDIRECT_BINDING_URI, logoutRequest.getDestination());
         final String spEntityID = getSpEntityId(servletRequest);
         final String idpEntityID = getIdpEntityId(servletRequest);
-        final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(logoutRequest, endpoint, spEntityID, idpEntityID);
+        final MessageContext messageContext = buildOutboundMessageContext(logoutRequest, endpoint, spEntityID, idpEntityID);
         encodeOutboundMessageContextRedirect(messageContext, servletResponse);
     }
     
@@ -237,7 +236,7 @@ public class SAML2Controller extends BaseSAMLController {
         final Endpoint endpoint = buildIdpSloEndpoint(SAMLConstants.SAML2_POST_BINDING_URI, logoutRequest.getDestination());
         final String spEntityID = getSpEntityId(servletRequest);
         final String idpEntityID = getIdpEntityId(servletRequest);
-        final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(logoutRequest, endpoint, spEntityID, idpEntityID);
+        final MessageContext messageContext = buildOutboundMessageContext(logoutRequest, endpoint, spEntityID, idpEntityID);
         SAMLMessageSecuritySupport.signMessage(messageContext);
         encodeOutboundMessageContextPost(messageContext, servletResponse);
     }
@@ -249,7 +248,7 @@ public class SAML2Controller extends BaseSAMLController {
         final Endpoint endpoint = buildIdpSloEndpoint(SAMLConstants.SAML2_REDIRECT_BINDING_URI, logoutResponse.getDestination());
         final String spEntityID = getSpEntityId(servletRequest);
         final String idpEntityID = getIdpEntityId(servletRequest);
-        final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(logoutResponse, endpoint, spEntityID, idpEntityID);
+        final MessageContext messageContext = buildOutboundMessageContext(logoutResponse, endpoint, spEntityID, idpEntityID);
         encodeOutboundMessageContextRedirect(messageContext, servletResponse);
     }
 
@@ -260,7 +259,7 @@ public class SAML2Controller extends BaseSAMLController {
         final Endpoint endpoint = buildIdpSloEndpoint(SAMLConstants.SAML2_POST_BINDING_URI, logoutResponse.getDestination());
         final String spEntityID = getSpEntityId(servletRequest);
         final String idpEntityID = getIdpEntityId(servletRequest);
-        final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(logoutResponse, endpoint, spEntityID, idpEntityID);
+        final MessageContext messageContext = buildOutboundMessageContext(logoutResponse, endpoint, spEntityID, idpEntityID);
         SAMLMessageSecuritySupport.signMessage(messageContext);
         encodeOutboundMessageContextPost(messageContext, servletResponse);
     }
@@ -271,14 +270,14 @@ public class SAML2Controller extends BaseSAMLController {
         logoutResponse.setInResponseTo(id);
         final String spEntityID = getSpEntityId(servletRequest);
         final String idpEntityID = getIdpEntityId(servletRequest);
-        final MessageContext<SAMLObject> messageContext = buildOutboundMessageContext(logoutResponse, null, spEntityID, idpEntityID);
+        final MessageContext messageContext = buildOutboundMessageContext(logoutResponse, null, spEntityID, idpEntityID);
         SAMLMessageSecuritySupport.signMessage(messageContext);
         encodeOutboundMessageContextSOAP(messageContext, servletResponse);
     }
     
 	@RequestMapping(value="/POST/ACS", method=RequestMethod.POST)
 	public ResponseEntity<String> handleSSOResponsePOST(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
-		final MessageContext<SAMLObject> messageContext = decodeInboundMessageContextPost(servletRequest);
+		final MessageContext messageContext = decodeInboundMessageContextPost(servletRequest);
 		
 		if (!(messageContext.getMessage() instanceof Response)) {
 			log.error("Inbound message was not a SAML 2 Response");
@@ -300,7 +299,7 @@ public class SAML2Controller extends BaseSAMLController {
 
     @RequestMapping(value="/Redirect/SLO", method=RequestMethod.GET)
     public ResponseEntity<String> handleSLOResponseRedirect(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
-        final MessageContext<SAMLObject> messageContext = decodeInboundMessageContextRedirect(servletRequest);
+        final MessageContext messageContext = decodeInboundMessageContextRedirect(servletRequest);
         
         if (messageContext.getMessage() instanceof LogoutRequest) {
             servletRequest.setAttribute("success", "1");
@@ -322,7 +321,7 @@ public class SAML2Controller extends BaseSAMLController {
 	
     @RequestMapping(value="/POST/SLO", method=RequestMethod.POST)
     public ResponseEntity<String> handleSLOResponsePOST(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
-        final MessageContext<SAMLObject> messageContext = decodeInboundMessageContextPost(servletRequest);
+        final MessageContext messageContext = decodeInboundMessageContextPost(servletRequest);
         
         if (messageContext.getMessage() instanceof LogoutRequest) {
             servletRequest.setAttribute("success", "1");
@@ -344,7 +343,7 @@ public class SAML2Controller extends BaseSAMLController {
     
     @RequestMapping(value="/SOAP/SLO", method=RequestMethod.POST)
     public ResponseEntity<String> handleSLOResponseSOAP(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
-        final MessageContext<SAMLObject> messageContext = decodeInboundMessageContextSOAP(servletRequest);
+        final MessageContext messageContext = decodeInboundMessageContextSOAP(servletRequest);
         
         if (messageContext.getMessage() instanceof LogoutRequest) {
             servletRequest.setAttribute("success", "1");
@@ -352,7 +351,7 @@ public class SAML2Controller extends BaseSAMLController {
             return null;
         }
         
-        final XMLObject msg = messageContext.getMessage();
+        final XMLObject msg = (XMLObject) messageContext.getMessage();
         final Element responseElement = msg.getDOM();
         final String formattedMessage = SerializeSupport.prettyPrintXML(responseElement);
         
@@ -364,8 +363,8 @@ public class SAML2Controller extends BaseSAMLController {
         return new ResponseEntity<>(formattedMessage, headers, HttpStatus.OK);
     }
 
-    private MessageContext<SAMLObject> buildOutboundMessageContext(SAMLObject message, Endpoint endpoint, String spEntityId, String idpEntityId) {
-		MessageContext<SAMLObject> messageContext = new MessageContext<>();
+    private MessageContext buildOutboundMessageContext(SAMLObject message, Endpoint endpoint, String spEntityId, String idpEntityId) {
+		final MessageContext messageContext = new MessageContext();
 		messageContext.setMessage(message);
 
 	    SAMLSelfEntityContext selfContext = messageContext.getSubcontext(SAMLSelfEntityContext.class, true);
@@ -393,7 +392,7 @@ public class SAML2Controller extends BaseSAMLController {
 		return messageContext;
 	}
 	
-	private void encodeOutboundMessageContextRedirect(MessageContext<SAMLObject> messageContext, HttpServletResponse servletResponse) throws Exception {
+	private void encodeOutboundMessageContextRedirect(MessageContext messageContext, HttpServletResponse servletResponse) throws Exception {
 		HTTPRedirectDeflateEncoder encoder = new HTTPRedirectDeflateEncoder();
 		try {
 			encoder.setHttpServletResponse(servletResponse);
@@ -410,7 +409,7 @@ public class SAML2Controller extends BaseSAMLController {
 		}
 	}
 	
-	private void encodeOutboundMessageContextPost(MessageContext<SAMLObject> messageContext, HttpServletResponse servletResponse) throws Exception {
+	private void encodeOutboundMessageContextPost(MessageContext messageContext, HttpServletResponse servletResponse) throws Exception {
 		HTTPPostEncoder encoder = new HTTPPostEncoder();
 		try {
 			encoder.setHttpServletResponse(servletResponse);
@@ -428,7 +427,7 @@ public class SAML2Controller extends BaseSAMLController {
 		}
 	}
 
-   private void encodeOutboundMessageContextArtifact(MessageContext<SAMLObject> messageContext, HttpServletResponse servletResponse) throws Exception {
+   private void encodeOutboundMessageContextArtifact(MessageContext messageContext, HttpServletResponse servletResponse) throws Exception {
         HTTPArtifactEncoder encoder = new HTTPArtifactEncoder();
         try {
             encoder.setHttpServletResponse(servletResponse);
@@ -447,7 +446,7 @@ public class SAML2Controller extends BaseSAMLController {
         }
     }
    
-   private void encodeOutboundMessageContextSOAP(MessageContext<SAMLObject> messageContext, HttpServletResponse servletResponse) throws Exception {
+   private void encodeOutboundMessageContextSOAP(MessageContext messageContext, HttpServletResponse servletResponse) throws Exception {
        HTTPSOAP11Encoder encoder = new HTTPSOAP11Encoder();
        try {
            encoder.setHttpServletResponse(servletResponse);
