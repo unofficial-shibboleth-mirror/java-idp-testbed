@@ -498,18 +498,30 @@ public class SAML2Controller extends BaseSAMLController {
 		nameIDPolicy.setAllowCreate(true);
 		authnRequest.setNameIDPolicy(nameIDPolicy);
 		
-		if (servletRequest.getParameter("classRef") != null) {
+		String param = StringSupport.trimOrNull(servletRequest.getParameter("nameIDFormat"));
+		if (param != null) {
+		    nameIDPolicy.setFormat(param);
+		}
+		
+		param = StringSupport.trimOrNull(servletRequest.getParameter("spNameQualifier"));
+		if (param != null) {
+		    nameIDPolicy.setSPNameQualifier(param);
+		}
+		
+		param = StringSupport.trimOrNull(servletRequest.getParameter("classRef"));
+		if (param != null) {
             final AuthnContextClassRef ref = (AuthnContextClassRef) builderFactory.getBuilder(
                     AuthnContextClassRef.DEFAULT_ELEMENT_NAME).buildObject(AuthnContextClassRef.DEFAULT_ELEMENT_NAME);
-            ref.setAuthnContextClassRef(servletRequest.getParameter("classRef"));
+            ref.setAuthnContextClassRef(param);
 	        final RequestedAuthnContext rac = (RequestedAuthnContext) builderFactory.getBuilder(
 	                RequestedAuthnContext.DEFAULT_ELEMENT_NAME).buildObject(RequestedAuthnContext.DEFAULT_ELEMENT_NAME);
 	        rac.getAuthnContextClassRefs().add(ref);
 	        authnRequest.setRequestedAuthnContext(rac);
 		}
 		
-		if (servletRequest.getParameter("requesters") != null) {
-		    final String[] requesters = servletRequest.getParameter("requesters").split(",");
+		param = StringSupport.trimOrNull(servletRequest.getParameter("requesters"));
+		if (param != null) {
+		    final String[] requesters = param.split(",");
 		    if (requesters != null && requesters.length > 0) {
 	            final Scoping scoping = (Scoping) builderFactory.getBuilder(
 	                    Scoping.DEFAULT_ELEMENT_NAME).buildObject(Scoping.DEFAULT_ELEMENT_NAME);
