@@ -80,7 +80,7 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Element;
 
 @Controller
-@RequestMapping("/SAML1")
+@RequestMapping({"/SAML1", "/{spId}/SAML1"})
 public class SAML1Controller extends BaseSAMLController {
 
     private final Logger log = LoggerFactory.getLogger(SAML1Controller.class);
