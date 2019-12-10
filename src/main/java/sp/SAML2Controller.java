@@ -512,7 +512,7 @@ public class SAML2Controller extends BaseSAMLController {
 		if (param != null) {
             final AuthnContextClassRef ref = (AuthnContextClassRef) builderFactory.getBuilder(
                     AuthnContextClassRef.DEFAULT_ELEMENT_NAME).buildObject(AuthnContextClassRef.DEFAULT_ELEMENT_NAME);
-            ref.setAuthnContextClassRef(param);
+            ref.setURI(param);
 	        final RequestedAuthnContext rac = (RequestedAuthnContext) builderFactory.getBuilder(
 	                RequestedAuthnContext.DEFAULT_ELEMENT_NAME).buildObject(RequestedAuthnContext.DEFAULT_ELEMENT_NAME);
 	        rac.getAuthnContextClassRefs().add(ref);
@@ -528,7 +528,7 @@ public class SAML2Controller extends BaseSAMLController {
 	            for (final String req : requesters) {
 	                final RequesterID requesterID = (RequesterID) builderFactory.getBuilder(
 	                        RequesterID.DEFAULT_ELEMENT_NAME).buildObject(RequesterID.DEFAULT_ELEMENT_NAME);
-	                requesterID.setRequesterID(req);
+	                requesterID.setURI(req);
 	                scoping.getRequesterIDs().add(requesterID);
 	            }
 	            authnRequest.setScoping(scoping);
