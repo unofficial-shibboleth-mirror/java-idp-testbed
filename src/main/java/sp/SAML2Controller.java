@@ -736,12 +736,16 @@ public class SAML2Controller extends BaseSAMLController {
      * @param servletResponse the servlet response
      * @param endpoint the endpoint to send the logout request to
      * @param principalName the name of the principal to logout
-     * @param trustedCertificate the trusted IdP public certificate
-     * @param trustedCertificatePassword the IdP certificate password
-     * @param clientCertificate the SP public certificate
-     * @param clientKey the SP private key
-     * @param clientPassword the SP password
+     * @param trustedTLSCertificate the trusted IdP public certificate
+     * @param trustedTLSCertificatePassword the IdP certificate password
+     * @param clientTLSCertificate the SP public certificate
+     * @param clientTLSPrivateKey the SP private key
+     * @param clientTLSPassword the SP password
+     * @param clientSigningCertificate ...
+     * @param clientSigningPrivateKey ...
+     * 
      * @return the SAML 2 logout response is displayed
+     * 
      * @throws Exception if an error occurs
      */
     @RequestMapping(value = "/InitSLO/SOAP", method = RequestMethod.POST) public ResponseEntity<String>
@@ -812,12 +816,16 @@ public class SAML2Controller extends BaseSAMLController {
      * @param servletResponse the servlet response
      * @param endpoint the endpoint to send the attribute query to
      * @param principalName the name of the principal to query for
-     * @param trustedCertificate the trusted IdP public certificate
-     * @param trustedCertificatePassword the IdP certificate password
-     * @param clientCertificate the SP public certificate
-     * @param clientKey the SP private key
-     * @param clientPassword the SP password
+     * @param trustedTLSCertificate the trusted IdP public certificate
+     * @param trustedTLSCertificatePassword the IdP certificate password
+     * @param clientTLSCertificate the SP public certificate
+     * @param clientTLSPrivateKey the SP private key
+     * @param clientTLSPassword the SP password
+     * @param clientSigningCertificate ...
+     * @param clientSigningPrivateKey ...
+     * 
      * @return the SAML 2 attribute query response is displayed
+     * 
      * @throws Exception if an error occurs
      */
     @RequestMapping(value = "/AttributeQuery", method = RequestMethod.POST) public ResponseEntity<String>
@@ -884,8 +892,9 @@ public class SAML2Controller extends BaseSAMLController {
     /**
      * Builds a basic SAML 2 attribute query.
      * 
-     * @param requester the requester
+     * @param servletRequest ...
      * @param principalName the principal name
+     * 
      * @return the attribute query
      */
     @Nonnull public AttributeQuery buildSAML2AttributeQueryRequest(@Nonnull final HttpServletRequest servletRequest,

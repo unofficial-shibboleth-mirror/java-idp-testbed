@@ -19,7 +19,7 @@
 public class Main {
 
     /**
-     * @param args
+     * @param args command-line arguments
      */
     public static void main(String[] args) {
         org.eclipse.jetty.start.Main.main(args);

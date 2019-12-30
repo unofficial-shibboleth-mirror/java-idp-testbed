@@ -46,32 +46,43 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * Interact with storage services via HTTP.
  * 
+ * <p>
  * Only the 'read' and 'create' storage operations are supported.
+ * </p>
  * 
+ * <p>
  * Examples follow.
+ * </p>
  * 
- * To create :
- * <p>
+ * <p>To create:</p>
+ * 
+ * <pre>
  * curl -X POST -dvalue=value 'http://localhost:8080/idp/storage/create/shibboleth.StorageService/context/key'
- * <p>
- * or
- * <p>
- * curl-X POST -dvalue=value 'http://localhost:8080/idp/storage/create?storageServiceId=shibboleth.StorageService&context=context&key=key'
- * <p>
+ * </pre>
  * 
- * To read :
- * <p>
+ * <p>or</p>
+ * 
+ * <pre>
+ * curl-X POST -dvalue=value 'http://localhost:8080/idp/storage/create?storageServiceId=shibboleth.StorageService&amp;context=context&amp;key=key'
+ * </pre>
+ * 
+ * <p>To read:</p>
+ * 
+ * <pre>
  * curl 'http://localhost:8080/idp/storage/read/shibboleth.StorageService/context/key'
- * <p>
- * or
- * <p>
- * curl 'http://localhost:8080/idp/storage/read?storageServiceId=shibboleth.StorageService&context=context&key=key'
- * <p>
+ * </pre>
  * 
- * To list storage services :
- * <p>
+ * <p>or</p>
+ * 
+ * <pre>
+ * curl 'http://localhost:8080/idp/storage/read?storageServiceId=shibboleth.StorageService&amp;context=context&amp;key=key'
+ * </pre>
+ * 
+ * <p>To list storage services:</p>
+ * 
+ * <pre>
  * curl 'http://localhost:8080/idp/storage/'
- * <p>
+ * </pre>
  */
 @Controller
 public class StorageServiceWrapperController {

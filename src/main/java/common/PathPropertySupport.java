@@ -71,8 +71,9 @@ public class PathPropertySupport {
      * Set system properties sourced from 'idp.properties' file.
      * 
      * @return the properties
-     * @throws FileNotFoundException
-     * @throws IOException
+     * 
+     * @throws FileNotFoundException ...
+     * @throws IOException ...
      */
     public static Properties setupIdPProperties() throws FileNotFoundException,
             IOException {

@@ -50,9 +50,10 @@ public class CASController {
     /**
      * Init SSO by redirecting to the CAS login service.
      * 
-     * @param servletRequest
-     * @param servletResponse
-     * @throws Exception
+     * @param servletRequest ...
+     * @param servletResponse ...
+     * 
+     * @throws Exception if something bad happens
      */
     @RequestMapping(value = "/InitSSO", method = RequestMethod.GET)
     public void initLogin(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
@@ -79,10 +80,12 @@ public class CASController {
     /**
      * Produce a page displaying a link to the CAS validation endpoint.
      * 
-     * @param servletRequest
-     * @param servletResponse
+     * @param servletRequest ...
+     * @param servletResponse ...
+     * 
      * @return HTML displaying a link to the CAS validation endpoint
-     * @throws Exception
+     * 
+     * @throws Exception if something bad happens
      */
     @RequestMapping(value = "/Service", method = RequestMethod.GET)
     public ResponseEntity<String> handleCASResponse(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
