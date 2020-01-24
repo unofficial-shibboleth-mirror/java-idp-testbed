@@ -182,6 +182,11 @@
 
         <!-- Provided scope -->
         <dependency>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>javax.servlet.jsp-api</artifactId>
             <scope>provided</scope>
@@ -231,6 +236,12 @@
             <artifactId>apache-jsp</artifactId>
             <version>${jetty.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.json</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
