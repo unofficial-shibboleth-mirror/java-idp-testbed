@@ -78,6 +78,68 @@ public class CASController {
     }
 
     /**
+     * Init SSO by redirecting to the CAS login service with the gateway parameter.
+     * 
+     * @param servletRequest ...
+     * @param servletResponse ...
+     * 
+     * @throws Exception if something bad happens
+     */
+    @RequestMapping(value = "/InitSSOGateway", method = RequestMethod.GET)
+    public void initLoginGateway(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
+
+        final String baseUrl = getBaseUrl(servletRequest);
+
+        final String endpointURL = baseUrl + idpCASEndpointPath + "/login";
+
+        final URLBuilder urlBuilder = new URLBuilder(endpointURL);
+
+        final List<Pair<String, String>> queryParams = urlBuilder.getQueryParams();
+
+        queryParams.add(new Pair<String, String>(ProtocolParam.Service.id(), baseUrl + casSPServicePath));
+        queryParams.add(new Pair<String, String>(ProtocolParam.Gateway.id(), "true"));
+
+        final String redirectURL = urlBuilder.buildURL();
+
+        HttpServletSupport.addNoCacheHeaders(servletResponse);
+        HttpServletSupport.setUTF8Encoding(servletResponse);
+
+        log.debug("Sending redirect to '{}'", redirectURL);
+        servletResponse.sendRedirect(redirectURL);
+    }
+
+    /**
+     * Init SSO by redirecting to the CAS login service with the renew parameter.
+     * 
+     * @param servletRequest ...
+     * @param servletResponse ...
+     * 
+     * @throws Exception if something bad happens
+     */
+    @RequestMapping(value = "/InitSSORenew", method = RequestMethod.GET)
+    public void initLoginGatewayRenew(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
+
+        final String baseUrl = getBaseUrl(servletRequest);
+
+        final String endpointURL = baseUrl + idpCASEndpointPath + "/login";
+
+        final URLBuilder urlBuilder = new URLBuilder(endpointURL);
+
+        final List<Pair<String, String>> queryParams = urlBuilder.getQueryParams();
+
+        queryParams.add(new Pair<String, String>(ProtocolParam.Service.id(), baseUrl + casSPServicePath));
+        queryParams.add(new Pair<String, String>(ProtocolParam.Renew.id(), "true"));
+
+        final String redirectURL = urlBuilder.buildURL();
+
+        HttpServletSupport.addNoCacheHeaders(servletResponse);
+        HttpServletSupport.setUTF8Encoding(servletResponse);
+
+        log.debug("Sending redirect to '{}'", redirectURL);
+        servletResponse.sendRedirect(redirectURL);
+    }
+
+    /**
      * Produce a page displaying a link to the CAS validation endpoint.
      * 
      * @param servletRequest ...
@@ -90,13 +152,22 @@ public class CASController {
     @RequestMapping(value = "/Service", method = RequestMethod.GET)
     public ResponseEntity<String> handleCASResponse(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
 
+        final String ticket = servletRequest.getParameter(ProtocolParam.Ticket.id());
+        if (ticket == null) {
+            final String html = "<html><body>No CAS ticket returned.</body></html>";
+            log.trace("Returning html '{}'", html);
+
+            final HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", "text/html");
+
+            return new ResponseEntity<>(html, headers, HttpStatus.FORBIDDEN);
+        }
+
         final String baseUrl = getBaseUrl(servletRequest);
 
         final String endpointURL = baseUrl + idpCASEndpointPath + "/serviceValidate";
 
         final URLBuilder urlBuilder = new URLBuilder(endpointURL);
-
-        final String ticket = servletRequest.getParameter(ProtocolParam.Ticket.id());
 
         final List<Pair<String, String>> queryParams = urlBuilder.getQueryParams();
         queryParams.add(new Pair<String, String>(ProtocolParam.Service.id(), baseUrl + casSPServicePath));
