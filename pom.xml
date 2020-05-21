@@ -17,7 +17,7 @@
         <idp.groupId>net.shibboleth.idp</idp.groupId>
         <idp.version>4.0.1-SNAPSHOT</idp.version>
         <idp-jetty-base.version>9.4.1-SNAPSHOT</idp-jetty-base.version>
-        <jetty.version>9.4.27.v20200227</jetty.version>
+        <jetty.version>9.4.28.v20200408</jetty.version>
         <opensaml.groupId>org.opensaml</opensaml.groupId>
         <opensaml.version>4.0.1-SNAPSHOT</opensaml.version>
         <spring-extensions.version>6.0.1-SNAPSHOT</spring-extensions.version>
