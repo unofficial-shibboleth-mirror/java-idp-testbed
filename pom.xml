@@ -47,11 +47,18 @@
             <groupId>${idp.groupId}</groupId>
             <artifactId>idp-conf</artifactId>
             <version>${idp.version}</version>
-            <type>test-jar</type>
         </dependency>
+
         <dependency>
             <groupId>${idp.groupId}</groupId>
             <artifactId>idp-conf</artifactId>
+            <version>${idp.version}</version>
+            <type>test-jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>${idp.groupId}</groupId>
+            <artifactId>idp-conf-impl</artifactId>
             <version>${idp.version}</version>
         </dependency>
 
@@ -171,7 +178,6 @@
         <dependency>
             <groupId>com.unboundid</groupId>
             <artifactId>unboundid-ldapsdk</artifactId>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -245,12 +251,6 @@
         </dependency>
 
         <dependency>
-            <groupId>net.shibboleth.utilities.jetty9</groupId>
-            <artifactId>jetty9-dta-ssl</artifactId>
-            <version>1.0.0</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>runtime</scope>
@@ -302,7 +302,7 @@
 
     <build>
         <plugins>
-            <!-- Build a jar in addition to a war. -->
+            <!-- Build a war in addition to a jar. -->
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
