@@ -507,6 +507,19 @@ public class SAML2Controller extends BaseSAMLController {
 		if (param != null) {
 		    nameIDPolicy.setSPNameQualifier(param);
 		}
+
+		param = StringSupport.trimOrNull(servletRequest.getParameter("subjectID"));
+		if (param != null) {
+	        final NameID nameID = (NameID) builderFactory.getBuilder(NameID.DEFAULT_ELEMENT_NAME).buildObject(NameID.DEFAULT_ELEMENT_NAME);
+	        nameID.setValue(param);
+	        param = StringSupport.trimOrNull(servletRequest.getParameter("subjectIDFormat"));
+	        if (param != null) {
+	            nameID.setFormat(param);
+	        }
+            final Subject subject = (Subject) builderFactory.getBuilder(Subject.DEFAULT_ELEMENT_NAME).buildObject(Subject.DEFAULT_ELEMENT_NAME);
+	        subject.setNameID(nameID);
+            authnRequest.setSubject(subject);
+		}
 		
 		param = StringSupport.trimOrNull(servletRequest.getParameter("classRef"));
 		if (param != null) {
