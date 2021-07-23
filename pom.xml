@@ -290,6 +290,12 @@
             <version>${cas-client.version}</version>
             <scope>runtime</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>${spring.groupId}</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
         <!-- Test scope -->
         <dependency>
