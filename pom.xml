@@ -22,7 +22,7 @@
         <opensaml.version>4.2.0-SNAPSHOT</opensaml.version>
         <spring-extensions.version>6.2.0-SNAPSHOT</spring-extensions.version>
         <cas-client.version>3.5.1</cas-client.version>
-        <oidc-commons.version>1.1.1-SNAPSHOT</oidc-commons.version>
+        <oidc-commons.version>1.2.0-SNAPSHOT</oidc-commons.version>
      </properties>
 
     <repositories>
