@@ -346,6 +346,11 @@
         </dependency>
         <dependency>
             <groupId>net.shibboleth.oidc</groupId>
+            <artifactId>oidc-common-profile-api</artifactId>
+            <version>${oidc-commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.shibboleth.oidc</groupId>
             <artifactId>oidc-common-saml-api</artifactId>
             <version>${oidc-commons.version}</version>
         </dependency>
