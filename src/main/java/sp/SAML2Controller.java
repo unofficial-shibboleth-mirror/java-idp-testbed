@@ -55,6 +55,8 @@ import org.opensaml.saml.saml2.core.AttributeQuery;
 import org.opensaml.saml.saml2.core.AuthnContextClassRef;
 import org.opensaml.saml.saml2.core.AuthnRequest;
 import org.opensaml.saml.saml2.core.Extensions;
+import org.opensaml.saml.saml2.core.IDPEntry;
+import org.opensaml.saml.saml2.core.IDPList;
 import org.opensaml.saml.saml2.core.Issuer;
 import org.opensaml.saml.saml2.core.LogoutRequest;
 import org.opensaml.saml.saml2.core.LogoutResponse;
@@ -536,18 +538,47 @@ public class SAML2Controller extends BaseSAMLController {
 		if (param != null) {
 		    final String[] requesters = param.split(",");
 		    if (requesters != null && requesters.length > 0) {
-	            final Scoping scoping = (Scoping) builderFactory.getBuilder(
-	                    Scoping.DEFAULT_ELEMENT_NAME).buildObject(Scoping.DEFAULT_ELEMENT_NAME);
 	            for (final String req : requesters) {
 	                final RequesterID requesterID = (RequesterID) builderFactory.getBuilder(
 	                        RequesterID.DEFAULT_ELEMENT_NAME).buildObject(RequesterID.DEFAULT_ELEMENT_NAME);
 	                requesterID.setURI(req);
-	                scoping.getRequesterIDs().add(requesterID);
+	                getScoping(authnRequest).getRequesterIDs().add(requesterID);
 	            }
-	            authnRequest.setScoping(scoping);
 		    }
 		}
+		
+        param = StringSupport.trimOrNull(servletRequest.getParameter("idplist"));
+        if (param != null) {
+            final String[] idplist = param.split(",");
+            if (idplist != null && idplist.length > 0) {
+                final IDPList obj = (IDPList) builderFactory.getBuilder(
+                        IDPList.DEFAULT_ELEMENT_NAME).buildObject(IDPList.DEFAULT_ELEMENT_NAME);
+                for (final String idp : idplist) {
+                    final IDPEntry entry = (IDPEntry) builderFactory.getBuilder(
+                            IDPEntry.DEFAULT_ELEMENT_NAME).buildObject(IDPEntry.DEFAULT_ELEMENT_NAME);
+                    entry.setProviderID(idp);
+                    obj.getIDPEntrys().add(entry);
+                }
+                getScoping(authnRequest).setIDPList(obj);
+            }
+        }
+
+        param = StringSupport.trimOrNull(servletRequest.getParameter("proxycount"));
+        if (param != null) {
+            getScoping(authnRequest).setProxyCount(Integer.valueOf(param));
+        }
+        
 		return authnRequest;
+	}
+	
+	private Scoping getScoping(@Nonnull final AuthnRequest request) {
+	    if (request.getScoping() == null) {
+            final Scoping scoping = (Scoping) builderFactory.getBuilder(
+                    Scoping.DEFAULT_ELEMENT_NAME).buildObject(Scoping.DEFAULT_ELEMENT_NAME);
+            request.setScoping(scoping);
+	    }
+	    
+	    return request.getScoping();
 	}
 
     private Extensions buildRequestedAttributesExtensions()
