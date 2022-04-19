@@ -309,60 +309,75 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Uncomment for OIDC plugin testing. -->
-        <!--
+        <!-- For OIDC plugin testing. -->
         <dependency>
             <groupId>net.shibboleth.idp.plugin.oidc</groupId>
             <artifactId>idp-plugin-oidc-op-impl</artifactId>
             <version>3.1.1-SNAPSHOT</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>net.shibboleth.oidc</groupId>
             <artifactId>oidc-common-attribute-api</artifactId>
             <version>${oidc-commons.version}</version>
+            <scope>runtime</scope>
+            <exclusions>
+                <!-- This breaks Jetty 10 due to being so old. -->
+                <exclusion>
+                    <groupId>org.ow2.asm</groupId>
+                    <artifactId>asm</artifactId>
+                </exclusion>
+            </exclusions>                
         </dependency>
         <dependency>
             <groupId>net.shibboleth.oidc</groupId>
             <artifactId>oidc-common-attribute-impl</artifactId>
             <version>${oidc-commons.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>net.shibboleth.oidc</groupId>
             <artifactId>oidc-common-crypto-api</artifactId>
             <version>${oidc-commons.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>net.shibboleth.oidc</groupId>
             <artifactId>oidc-common-crypto-impl</artifactId>
             <version>${oidc-commons.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>net.shibboleth.oidc</groupId>
             <artifactId>oidc-common-metadata-api</artifactId>
             <version>${oidc-commons.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>net.shibboleth.oidc</groupId>
             <artifactId>oidc-common-metadata-impl</artifactId>
             <version>${oidc-commons.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>net.shibboleth.oidc</groupId>
             <artifactId>oidc-common-profile-api</artifactId>
             <version>${oidc-commons.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>net.shibboleth.oidc</groupId>
             <artifactId>oidc-common-saml-api</artifactId>
             <version>${oidc-commons.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>net.shibboleth.oidc</groupId>
             <artifactId>oidc-common-saml-impl</artifactId>
             <version>${oidc-commons.version}</version>
+            <scope>runtime</scope>
         </dependency>
-        -->
-
+        
     </dependencies>
 
     <build>
