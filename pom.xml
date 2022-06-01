@@ -4,32 +4,28 @@
     <parent>
         <groupId>net.shibboleth</groupId>
         <artifactId>parent</artifactId>
-        <version>11.3.3-SNAPSHOT</version>
+        <version>17.0.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.shibboleth.idp</groupId>
     <artifactId>idp-testbed</artifactId>
-    <version>0.8.0-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <properties>
         <idp.groupId>net.shibboleth.idp</idp.groupId>
-        <idp.version>4.2.2-SNAPSHOT</idp.version>
-        <idp-jetty-base.version>9.4.1-SNAPSHOT</idp-jetty-base.version>
-        <jetty.version>9.4.44.v20210927</jetty.version>
+        <idp.version>5.0.0-SNAPSHOT</idp.version>
         <opensaml.groupId>org.opensaml</opensaml.groupId>
-        <opensaml.version>4.2.1-SNAPSHOT</opensaml.version>
-        <spring-extensions.version>6.2.1-SNAPSHOT</spring-extensions.version>
+        <opensaml.version>5.0.0-SNAPSHOT</opensaml.version>
+        <spring-extensions.version>7.0.0-SNAPSHOT</spring-extensions.version>
         <cas-client.version>3.5.1</cas-client.version>
         <oidc-commons.version>2.1.0-SNAPSHOT</oidc-commons.version>
-        <!--  Jetty 10  -->
-        <!--
-        <idp-jetty-base.version>10.0.0-SNAPSHOT</idp-jetty-base.version>
-        <jetty.version>10.0.9</jetty.version>
+        <idp-jetty-base.version>11.0.0-SNAPSHOT</idp-jetty-base.version>
+        <jetty.version>11.0.9</jetty.version>
+        <jetty-jstl.version>11.0.0</jetty-jstl.version>
         <logback.version>1.3.0-alpha13</logback.version>
         <slf4j.version>2.0.0-alpha5</slf4j.version>
-        -->
      </properties>
 
     <repositories>
@@ -207,13 +203,13 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>javax.servlet.jsp-api</artifactId>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -258,7 +254,7 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>apache-jstl</artifactId>
-            <version>${jetty.version}</version>
+            <version>${jetty-jstl.version}</version>
             <scope>provided</scope>
         </dependency>
 
