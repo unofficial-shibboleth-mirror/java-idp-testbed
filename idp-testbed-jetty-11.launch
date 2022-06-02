@@ -12,7 +12,7 @@
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
     <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11/"/>
+    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17/"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="Main"/>
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="java-idp-testbed"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-Djetty.home=/opt/jetty-home-11.0.9 -Djava.security.egd=file:/dev/urandom -Didp.home=classpath: -Didp.webflows=classpath*:/flows -Dlogback.configurationFile=resources/logback.xml -Didp.logfiles=${workspace_loc:java-idp-testbed/src/main/resources/logs} -Djava.io.tmpdir=tmp -Dnet.shibboleth.idp.plugin.oidc.op.servlet.RegisterFilterServletContextInitializer=disabled -Didp.loglevel.ldap=INFO -Didp.loglevel.idp=DEBUG -Didp.loglevel.opensaml=DEBUG -Didp.loglevel.messages=DEBUG"/>
