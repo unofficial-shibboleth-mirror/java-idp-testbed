@@ -19,7 +19,7 @@
         <opensaml.groupId>org.opensaml</opensaml.groupId>
         <opensaml.version>5.0.0-SNAPSHOT</opensaml.version>
         <spring-extensions.version>7.0.0-SNAPSHOT</spring-extensions.version>
-        <cas-client.version>3.5.1</cas-client.version>
+        <cas-client.version>3.6.4</cas-client.version>
         <oidc-commons.version>2.1.0-SNAPSHOT</oidc-commons.version>
         <idp-jetty-base.version>11.0.0-SNAPSHOT</idp-jetty-base.version>
         <jetty.version>11.0.9</jetty.version>
@@ -291,13 +291,16 @@
             <artifactId>hsqldb</artifactId>
             <scope>runtime</scope>
         </dependency>
-
+        
+        <!--
+        TODO: No Jakarta support yet.
         <dependency>
             <groupId>org.jasig.cas.client</groupId>
             <artifactId>cas-client-core</artifactId>
             <version>${cas-client.version}</version>
             <scope>runtime</scope>
         </dependency>
+        -->
         
         <dependency>
             <groupId>${spring.groupId}</groupId>
@@ -306,6 +309,7 @@
         </dependency>
 
         <!-- For OIDC plugin testing. -->
+        <!--
         <dependency>
             <groupId>net.shibboleth.idp.plugin.oidc</groupId>
             <artifactId>idp-plugin-oidc-op-impl</artifactId>
@@ -318,7 +322,6 @@
             <version>${oidc-commons.version}</version>
             <scope>runtime</scope>
             <exclusions>
-                <!-- This breaks Jetty 10 due to being so old. -->
                 <exclusion>
                     <groupId>org.ow2.asm</groupId>
                     <artifactId>asm</artifactId>
@@ -373,6 +376,7 @@
             <version>${oidc-commons.version}</version>
             <scope>runtime</scope>
         </dependency>
+        -->
         
     </dependencies>
 
