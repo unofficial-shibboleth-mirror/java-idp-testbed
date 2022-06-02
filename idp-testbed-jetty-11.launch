@@ -2,7 +2,7 @@
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
     <stringAttribute key="bad_container_name" value="/idp-testbed-jetty-10"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-        <listEntry value="/java-idp-testbed/src/main/java/Main.java"/>
+        <listEntry value="/idp-testbed/src/main/java/Main.java"/>
     </listAttribute>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
         <listEntry value="1"/>
@@ -14,9 +14,9 @@
     <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
     <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17/"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="Main"/>
-    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="java-idp-testbed"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-Djetty.home=/opt/jetty-home-11.0.9 -Djava.security.egd=file:/dev/urandom -Didp.home=classpath: -Didp.webflows=classpath*:/flows -Dlogback.configurationFile=resources/logback.xml -Didp.logfiles=${workspace_loc:java-idp-testbed/src/main/resources/logs} -Djava.io.tmpdir=tmp -Dnet.shibboleth.idp.plugin.oidc.op.servlet.RegisterFilterServletContextInitializer=disabled -Didp.loglevel.ldap=INFO -Didp.loglevel.idp=DEBUG -Didp.loglevel.opensaml=DEBUG -Didp.loglevel.messages=DEBUG"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="java-idp-testbed"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="idp-testbed"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-Djetty.home=H:\Perforce\Juno\New\jetty-home-11.0.9 -Didp.home=classpath: -Didp.webflows=classpath*:/flows -Dlogback.configurationFile=resources/logback.xml -Didp.logfiles=H:\Perforce\Juno\New\java-idp-testbed/src/main/resources/logs -Djava.io.tmpdir=tmp -Dnet.shibboleth.idp.plugin.oidc.op.servlet.RegisterFilterServletContextInitializer=disabled -Didp.loglevel.ldap=INFO -Didp.loglevel.idp=DEBUG -Didp.loglevel.opensaml=DEBUG -Didp.loglevel.messages=DEBUG -Didp.backchannel.keyStorePath=h:\Perforce\Juno\New\java-identity-provider\idp-conf\src\test\resources\credentials/idp-backchannel.p12 -Djetty.sslContext.trustStorePath=h:\Perforce\Juno\New\java-identity-provider\idp-conf\src\test\resources\credentials/idp-userfacing.p12 -Djetty.sslContext.keyStorePath=h:\Perforce\Juno\New\java-identity-provider\idp-conf\src\test\resources\credentials/idp-userfacing.p12"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="idp-testbed"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:java-idp-jetty-base/src/main/resources/jetty-base}"/>
+    <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:idp-jetty-base/src/main/resources/jetty-base}"/>
 </launchConfiguration>
