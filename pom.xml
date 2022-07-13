@@ -22,7 +22,7 @@
         <opensaml.version>4.2.1-SNAPSHOT</opensaml.version>
         <spring-extensions.version>6.2.1-SNAPSHOT</spring-extensions.version>
         <cas-client.version>3.5.1</cas-client.version>
-        <oidc-commons.version>2.1.0-SNAPSHOT</oidc-commons.version>
+        <oidc-commons.version>2.1.1-SNAPSHOT</oidc-commons.version>
         <!--  Jetty 10  -->
         <!--
         <idp-jetty-base.version>10.0.0-SNAPSHOT</idp-jetty-base.version>
@@ -313,7 +313,7 @@
         <dependency>
             <groupId>net.shibboleth.idp.plugin.oidc</groupId>
             <artifactId>idp-plugin-oidc-op-impl</artifactId>
-            <version>3.2.0-SNAPSHOT</version>
+            <version>3.2.1-SNAPSHOT</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
