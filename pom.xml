@@ -15,7 +15,7 @@
 
     <properties>
         <idp.groupId>net.shibboleth.idp</idp.groupId>
-        <idp.version>4.2.2-SNAPSHOT</idp.version>
+        <idp.version>4.3.0-SNAPSHOT</idp.version>
         <idp-jetty-base.version>9.4.1-SNAPSHOT</idp-jetty-base.version>
         <jetty.version>9.4.44.v20210927</jetty.version>
         <opensaml.groupId>org.opensaml</opensaml.groupId>
@@ -26,7 +26,7 @@
         <!--  Jetty 10  -->
         <!--
         <idp-jetty-base.version>10.0.0-SNAPSHOT</idp-jetty-base.version>
-        <jetty.version>10.0.9</jetty.version>
+        <jetty.version>10.0.11</jetty.version>
         <logback.version>1.3.0-alpha13</logback.version>
         <slf4j.version>2.0.0-alpha5</slf4j.version>
         -->
@@ -310,6 +310,7 @@
         </dependency>
 
         <!-- For OIDC plugin testing. -->
+        <!--
         <dependency>
             <groupId>net.shibboleth.idp.plugin.oidc</groupId>
             <artifactId>idp-plugin-oidc-op-impl</artifactId>
@@ -322,7 +323,6 @@
             <version>${oidc-commons.version}</version>
             <scope>runtime</scope>
             <exclusions>
-                <!-- This breaks Jetty 10 due to being so old. -->
                 <exclusion>
                     <groupId>org.ow2.asm</groupId>
                     <artifactId>asm</artifactId>
@@ -377,6 +377,7 @@
             <version>${oidc-commons.version}</version>
             <scope>runtime</scope>
         </dependency>
+        -->
         
     </dependencies>
 
