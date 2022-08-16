@@ -24,11 +24,14 @@ import net.shibboleth.utilities.java.support.security.IdentifierGenerationStrate
 import net.shibboleth.utilities.java.support.security.impl.Type4UUIDIdentifierGenerationStrategy;
 import net.shibboleth.utilities.java.support.xml.ParserPool;
 
+import java.util.function.Supplier;
+
 import org.apache.velocity.app.VelocityEngine;
 import org.opensaml.core.xml.XMLObjectBuilderFactory;
 import org.opensaml.core.xml.io.MarshallerFactory;
 import org.opensaml.messaging.context.MessageContext;
 import org.opensaml.messaging.decoder.MessageDecodingException;
+import org.opensaml.messaging.decoder.servlet.BaseHttpServletRequestXMLMessageDecoder;
 import org.opensaml.saml.common.binding.artifact.SAMLArtifactMap;
 import org.opensaml.saml.saml2.binding.decoding.impl.HTTPPostDecoder;
 import org.opensaml.saml.saml2.binding.decoding.impl.HTTPRedirectDeflateDecoder;
@@ -59,12 +62,20 @@ public abstract class BaseSAMLController {
     @Autowired @Qualifier("test.sp.Credential") protected Credential spCredential;
     
     @Autowired protected ApplicationContext applicationContext;
+
+    private void setRequest(final BaseHttpServletRequestXMLMessageDecoder decoder, final HttpServletRequest servletRequest) {
+        decoder.setHttpServletRequestSupplier(new Supplier() {
+            public HttpServletRequest get() {
+                return servletRequest;
+            }
+        });
+    }
     
     protected MessageContext decodeInboundMessageContextPost(HttpServletRequest servletRequest)
             throws Exception {
         HTTPPostDecoder decoder = new HTTPPostDecoder();
         try {
-            decoder.setHttpServletRequest(servletRequest);
+            setRequest(decoder, servletRequest);
             decoder.setParserPool(parserPool);
             decoder.initialize();
 
@@ -83,7 +94,7 @@ public abstract class BaseSAMLController {
             throws Exception {
         HTTPSOAP11Decoder decoder = new HTTPSOAP11Decoder();
         try {
-            decoder.setHttpServletRequest(servletRequest);
+            setRequest(decoder, servletRequest);
             decoder.setParserPool(parserPool);
             decoder.initialize();
 
@@ -102,7 +113,7 @@ public abstract class BaseSAMLController {
             throws Exception {
         HTTPRedirectDeflateDecoder decoder = new HTTPRedirectDeflateDecoder();
         try {
-            decoder.setHttpServletRequest(servletRequest);
+            setRequest(decoder, servletRequest);
             decoder.setParserPool(parserPool);
             decoder.initialize();
 

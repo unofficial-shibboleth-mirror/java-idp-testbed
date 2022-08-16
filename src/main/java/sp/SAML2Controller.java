@@ -8,20 +8,11 @@ import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.time.Instant;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.net.ssl.SSLContext;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
-import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.net.URLBuilder;
-import net.shibboleth.utilities.java.support.primitive.StringSupport;
-import net.shibboleth.utilities.java.support.security.impl.SecureRandomIdentifierGenerationStrategy;
-import net.shibboleth.utilities.java.support.xml.SerializeSupport;
-import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.SSLContextBuilder;
@@ -36,6 +27,7 @@ import org.opensaml.core.xml.io.MarshallingException;
 import org.opensaml.messaging.context.InOutOperationContext;
 import org.opensaml.messaging.context.MessageContext;
 import org.opensaml.messaging.encoder.MessageEncodingException;
+import org.opensaml.messaging.encoder.servlet.AbstractHttpServletResponseMessageEncoder;
 import org.opensaml.saml.common.SAMLObject;
 import org.opensaml.saml.common.SAMLObjectBuilder;
 import org.opensaml.saml.common.SAMLVersion;
@@ -97,6 +89,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Element;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.net.URLBuilder;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
+import net.shibboleth.utilities.java.support.security.impl.SecureRandomIdentifierGenerationStrategy;
+import net.shibboleth.utilities.java.support.xml.SerializeSupport;
+import net.shibboleth.utilities.java.support.xml.XMLParserException;
 
 @Controller
 @RequestMapping({"/SAML2", "/{spId}/SAML2"})
@@ -393,11 +395,19 @@ public class SAML2Controller extends BaseSAMLController {
 		
 		return messageContext;
 	}
-	
+
+    private void setupResponse(final AbstractHttpServletResponseMessageEncoder encoder, final HttpServletResponse response) {
+        encoder.setHttpServletResponseSupplier(new Supplier() {
+            public HttpServletResponse get() {
+                return response;
+            }
+        });
+    }
+
 	private void encodeOutboundMessageContextRedirect(MessageContext messageContext, HttpServletResponse servletResponse) throws Exception {
 		HTTPRedirectDeflateEncoder encoder = new HTTPRedirectDeflateEncoder();
 		try {
-			encoder.setHttpServletResponse(servletResponse);
+		    setupResponse(encoder,servletResponse);
 			encoder.setMessageContext(messageContext);
 			encoder.initialize();
 			
@@ -414,7 +424,7 @@ public class SAML2Controller extends BaseSAMLController {
 	private void encodeOutboundMessageContextPost(MessageContext messageContext, HttpServletResponse servletResponse) throws Exception {
 		HTTPPostEncoder encoder = new HTTPPostEncoder();
 		try {
-			encoder.setHttpServletResponse(servletResponse);
+		    setupResponse(encoder,servletResponse);
 			encoder.setMessageContext(messageContext);
 			encoder.setVelocityEngine(velocityEngine);
 			encoder.initialize();
@@ -432,7 +442,7 @@ public class SAML2Controller extends BaseSAMLController {
    private void encodeOutboundMessageContextArtifact(MessageContext messageContext, HttpServletResponse servletResponse) throws Exception {
         HTTPArtifactEncoder encoder = new HTTPArtifactEncoder();
         try {
-            encoder.setHttpServletResponse(servletResponse);
+            setupResponse(encoder,servletResponse);
             encoder.setMessageContext(messageContext);
             encoder.setVelocityEngine(velocityEngine);
             encoder.setArtifactMap(artifactMap);
@@ -451,7 +461,7 @@ public class SAML2Controller extends BaseSAMLController {
    private void encodeOutboundMessageContextSOAP(MessageContext messageContext, HttpServletResponse servletResponse) throws Exception {
        HTTPSOAP11Encoder encoder = new HTTPSOAP11Encoder();
        try {
-           encoder.setHttpServletResponse(servletResponse);
+           setupResponse(encoder,servletResponse);
            encoder.setMessageContext(messageContext);
            encoder.initialize();
            
