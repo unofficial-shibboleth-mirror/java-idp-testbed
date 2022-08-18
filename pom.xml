@@ -19,7 +19,7 @@
         <idp-jetty-base.version>9.4.1-SNAPSHOT</idp-jetty-base.version>
         <jetty.version>9.4.44.v20210927</jetty.version>
         <opensaml.groupId>org.opensaml</opensaml.groupId>
-        <opensaml.version>4.2.1-SNAPSHOT</opensaml.version>
+        <opensaml.version>4.3.0-SNAPSHOT</opensaml.version>
         <spring-extensions.version>6.2.1-SNAPSHOT</spring-extensions.version>
         <cas-client.version>3.5.1</cas-client.version>
         <oidc-commons.version>2.1.1-SNAPSHOT</oidc-commons.version>
