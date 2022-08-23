@@ -151,6 +151,7 @@
             <artifactId>idp-war</artifactId>
             <version>${idp.version}</version>
             <scope>runtime</scope>
+            <type>pom</type>
         </dependency>
 
         <!-- Don't know why we have to directly include this. -->
